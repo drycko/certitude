@@ -129,7 +129,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        Str::slug((string) env('APP_NAME', 'laravel')).'-session'
+        Str::slug(env('APP_NAME', 'laravel')).'_session'
     ),
 
     /*
@@ -151,12 +151,12 @@ return [
     |--------------------------------------------------------------------------
     |
     | This value determines the domain and subdomains the session cookie is
-    | available to. By default, the cookie will be available to the root
-    | domain without subdomains. Typically, this shouldn't be changed.
+    | available to. For multi-tenant setup, set to '.ubix.co.za' to allow
+    | cookies to work across all subdomains (both central and tenant domains).
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => env('SESSION_DOMAIN', '.ubix.co.za'),
 
     /*
     |--------------------------------------------------------------------------

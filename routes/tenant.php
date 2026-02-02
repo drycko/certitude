@@ -446,10 +446,10 @@ Route::middleware([
 
     });
 
-    // future guest portal will use magic logins and public access routes
-    Route::prefix('/guest')->group(function () {
-        require __DIR__.'/tenant-guest-portal.php';
-    });
+    // // future guest portal will use magic logins and public access routes
+    // Route::prefix('/guest')->group(function () {
+    //     require __DIR__.'/tenant-guest-portal.php';
+    // });
 
 
 });

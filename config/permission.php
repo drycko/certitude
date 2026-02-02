@@ -13,7 +13,8 @@ return [
          * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        'permission' => Spatie\Permission\Models\Permission::class,
+        // 'permission' => Spatie\Permission\Models\Permission::class,
+        'permission' => App\Models\Tenant\Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -24,7 +25,8 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role' => Spatie\Permission\Models\Role::class,
+        // 'role' => Spatie\Permission\Models\Role::class,
+        'role' => App\Models\Tenant\Role::class,
 
     ],
 
@@ -187,6 +189,8 @@ return [
 
         /*
          * The cache key used to store all permissions.
+         * Note: We rely on CacheTenancyBootstrapper to scope the cache by tenant,
+         * and our RefreshPermissionCache middleware to clear cache on context switches.
          */
 
         'key' => 'spatie.permission.cache',
