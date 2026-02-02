@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\PowerbiLinkType;
 use App\Models\Tenant\UserGroup;
 use App\Services\NotificationService;
-use App\Services\UserAccessService;
+use App\Services\Tenant\UserAccessService;
 use Illuminate\Http\Request;
 
 class PowerbiLinkTypeController extends Controller

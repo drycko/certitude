@@ -10,7 +10,7 @@ use App\Models\Tenant\Fbo;
 use App\Models\Tenant\Commodity;
 use App\Models\Tenant\GrowerUser;
 use App\Services\NotificationService;
-use App\Services\UserAccessService;
+use App\Services\Tenant\UserAccessService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

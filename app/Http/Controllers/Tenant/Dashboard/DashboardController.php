@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Tenant\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Services\UserAccessService;
-use App\Services\PowerbiService;
+use App\Services\Tenant\UserAccessService;
+use App\Services\Tenant\PowerbiService;
 use App\Models\Tenant\Commodity;
 use App\Models\Tenant\HelpArticle;
 use Illuminate\Http\Request;
@@ -38,7 +38,7 @@ class DashboardController extends Controller
 
         // if customer role, redirect to documents page
         if ($user->isCustomerRole()) {
-            return redirect()->route('documents.index');
+            return redirect()->route('tenant.customer.index');
         }
 
         // Get powerbi links for user
@@ -62,7 +62,7 @@ class DashboardController extends Controller
         // Dashboard statistics
         $stats = $this->getDashboardStats($user);
 
-        return view('dashboard.index', compact(
+        return view('tenant.dashboard.index', compact(
             'recentDocuments',
             'powerbiLinks',
             'expiringDocuments',

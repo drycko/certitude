@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Models\HelpArticle;
 use Illuminate\Http\Request;
 use App\Services\NotificationService;
-use App\Services\UserAccessService;
+use App\Services\Tenant\UserAccessService;
 use Illuminate\Support\Facades\Auth;
 
 class HelpController extends Controller

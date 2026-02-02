@@ -11,7 +11,7 @@ use App\Models\Tenant\Fbo;
 use App\Models\Tenant\Grower;
 use App\Models\Tenant\Variety;
 use App\Services\FileStorageService;
-use App\Services\UserAccessService;
+use App\Services\Tenant\UserAccessService;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

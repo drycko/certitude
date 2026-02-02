@@ -7,7 +7,7 @@ use App\Models\Tenant\PowerbiLink;
 use App\Models\Tenant\PowerbiLinkType;
 use App\Models\Tenant\Company;
 use App\Services\powerbiService;
-use App\Services\UserAccessService;
+use App\Services\Tenant\UserAccessServiceService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;

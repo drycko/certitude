@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Tenant;
 
-use App\Models\User;
-use App\Models\PowerbiLink;
-use App\Models\PowerbiLinkType;
+use App\Models\Tenant\User;
+use App\Models\Tenant\PowerbiLink;
+use App\Models\Tenant\PowerbiLinkType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 

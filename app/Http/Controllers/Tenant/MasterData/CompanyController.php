@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Tenant\MasterData;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Company;
 use App\Services\NotificationService;
-use App\Services\UserAccessService;
+use App\Services\Tenant\UserAccessService;
 use App\Services\FileStorageService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;

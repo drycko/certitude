@@ -5,28 +5,28 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-
-// Tenant Controllers
-use App\Http\Controllers\Tenant\DashboardController;
-use App\Http\Controllers\Tenant\DocumentController;
-use App\Http\Controllers\Tenant\PowerbiLinkController;
-use App\Http\Controllers\Tenant\UserController;
-use App\Http\Controllers\Tenant\AccessRequestController;
-use App\Http\Controllers\Tenant\RoleController;
-use App\Http\Controllers\Tenant\PermissionController;
-use App\Http\Controllers\Tenant\RoleAssignmentController;
-use App\Http\Controllers\Tenant\GrowerController;
-use App\Http\Controllers\Tenant\FboController;
-use App\Http\Controllers\Tenant\CommodityController;
-use App\Http\Controllers\Tenant\VarietyController;
-use App\Http\Controllers\Tenant\VesselController;
-use App\Http\Controllers\Tenant\UserGroupController;
-use App\Http\Controllers\Tenant\CompanyController;
-use App\Http\Controllers\Tenant\DocumentTypeController;
-use App\Http\Controllers\Tenant\PowerbiLinkTypeController;
+use App\Http\Controllers\Tenant\Dashboard\DashboardController;
+use App\Http\Controllers\Tenant\FileManager\DocumentController;
+// use App\Http\Controllers\PowerBi\PowerBiController;
+use App\Http\Controllers\Tenant\SummaryManager\SummaryLinkController;
+use App\Http\Controllers\Tenant\UserManagement\UserController;
+use App\Http\Controllers\Tenant\UserManagement\RoleController;
+use App\Http\Controllers\Tenant\UserManagement\RoleAssignmentController;
+use App\Http\Controllers\Tenant\UserManagement\PermissionController;
+use App\Http\Controllers\Tenant\UserManagement\AccessRequestController;
+use App\Http\Controllers\Tenant\MasterData\GrowerController;
+use App\Http\Controllers\Tenant\MasterData\GrowerAssignUserController;
+use App\Http\Controllers\Tenant\MasterData\GrowerAssignFboController;
+use App\Http\Controllers\Tenant\MasterData\CommodityController;
+use App\Http\Controllers\Tenant\MasterData\VarietyController;
+use App\Http\Controllers\Tenant\MasterData\VesselController;
+use App\Http\Controllers\Tenant\MasterData\FboController;
+use App\Http\Controllers\Tenant\MasterData\UserGroupController;
+use App\Http\Controllers\Tenant\MasterData\CompanyController;
+use App\Http\Controllers\Tenant\MasterData\DocumentTypeController;
+use App\Http\Controllers\Tenant\MasterData\SummaryLinkTypeController;
 use App\Http\Controllers\Tenant\HelpController;
-use App\Http\Controllers\Tenant\ActivityLogController;
-use App\Http\Controllers\Tenant\TenantSettingController;
+use Illuminate\Support\Facades\Auth;
 
 Route::middleware([
     'web',
@@ -82,7 +82,7 @@ Route::middleware([
     });
 
     // Protected routes with property context (prefixed 't' for tenant)
-    Route::prefix('/t')->middleware(['auth:tenant', 'must.change.password', 'property.selector', 'subscription.check'])->group(function () {
+    Route::prefix('/t')->middleware(['auth:tenant', 'must.change.password', 'subscription.check'])->group(function () {
         // redirect to dashboard
         Route::get('/', function () {
             return redirect()->route('tenant.dashboard');

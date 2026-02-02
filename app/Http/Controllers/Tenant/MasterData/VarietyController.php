@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Tenant\MasterData;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Variety;
 use App\Services\NotificationService;
-use App\Services\UserAccessService;
+use App\Services\Tenant\UserAccessService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
