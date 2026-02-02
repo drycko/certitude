@@ -1,0 +1,343 @@
+/* Certitude Admin Theme - Modern Design */
+
+/* Variables */
+:root {
+    --sidebar-width: 240px;
+    --header-height: 64px;
+    --primary-color: #6366f1;
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #e5e7eb;
+    --sidebar-text: #6b7280;
+    --sidebar-hover: #f3f4f6;
+    --sidebar-active: #eef2ff;
+    --sidebar-active-text: #4f46e5;
+    --header-bg: #ffffff;
+    --header-border: #e5e7eb;
+}
+
+/* Admin Layout Structure */
+.admin-layout {
+    min-height: 100vh;
+    background-color: #f9fafb;
+}
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    z-index: 1100;
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 3px;
+}
+
+/* Sidebar Brand */
+.sidebar-brand {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+}
+
+.sidebar-brand a {
+    color: #111827;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-brand i {
+    color: var(--primary-color);
+}
+
+/* Sidebar Content */
+.sidebar-content {
+    flex: 1;
+    padding: 1rem 0.75rem;
+    overflow-y: auto;
+}
+
+.sidebar-nav {
+    padding: 0;
+}
+
+.sidebar-nav .nav {
+    gap: 0.25rem;
+}
+
+.sidebar-nav .nav-heading {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9ca3af;
+    margin-bottom: 0.5rem;
+    padding: 0 0.75rem;
+}
+
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 0.75rem;
+    color: var(--sidebar-text);
+    border-radius: 0.5rem;
+    transition: all 0.15s;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.sidebar-nav .nav-link i {
+    font-size: 1.125rem;
+    margin-right: 0.75rem;
+    width: 1.25rem;
+    text-align: center;
+}
+
+.sidebar-nav .nav-link:hover {
+    background-color: var(--sidebar-hover);
+    color: #374151;
+}
+
+.sidebar-nav .nav-link.active {
+    background-color: var(--sidebar-active);
+    color: var(--sidebar-active-text);
+}
+
+/* Header */
+.admin-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: var(--sidebar-width);
+    height: var(--header-height);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    z-index: 1000;
+    transition: left 0.3s ease;
+}
+
+.hamburger-menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.15s;
+}
+
+.hamburger-menu:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+/* Header Buttons */
+.btn-icon {
+    position: relative;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    color: #6b7280;
+    border-radius: 0.5rem;
+    transition: all 0.15s;
+}
+
+.btn-icon:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.btn-icon .badge-dot {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 8px;
+    height: 8px;
+    background-color: #ef4444;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.btn-user {
+    background: none;
+    border: 1px solid #e5e7eb;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.5rem;
+    color: #374151;
+    transition: all 0.15s;
+}
+
+.btn-user:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.user-avatar {
+    font-size: 1.75rem;
+    color: #6b7280;
+    line-height: 1;
+}
+
+.user-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    line-height: 1.25;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: #6b7280;
+    line-height: 1.25;
+}
+
+/* Sidebar Backdrop */
+.sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+    display: none;
+}
+
+.sidebar-backdrop.show {
+    display: block;
+}
+
+/* Main Content */
+.admin-main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    margin-top: var(--header-height);
+    min-height: calc(100vh - var(--header-height));
+    transition: margin-left 0.3s ease;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    min-width: 200px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.dropdown-item i {
+    width: 1.25rem;
+}
+
+.dropdown-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    padding: 0.5rem 1rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 991.98px) {
+    .admin-header {
+        left: 0;
+    }
+    
+    .hamburger-menu {
+        display: flex;
+    }
+    
+    .admin-sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+    }
+    
+    .admin-sidebar.show {
+        transform: translateX(0);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .admin-main {
+        margin-left: 0;
+    }
+}
+
+/* Cards */
+.card {
+    border: 1px solid #e5e7eb;
+    box-shadow: none;
+    border-radius: 0.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 1.5rem;
+}
+
+/* Table */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    padding: 0.75rem 1rem;
+}
+
+.table tbody td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+}
+
+/* Badges */
+.badge {
+    padding: 0.25rem 0.625rem;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+/* Utilities */
+.shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}

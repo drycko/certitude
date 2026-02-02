@@ -1,0 +1,50 @@
+// ==========================================================================
+// Bootstrap Admin Template - Modern Version
+// Main SCSS Entry Point
+// ==========================================================================
+
+// NOTE: Bootstrap is already imported in resources/sass/app.scss
+// We only import our custom styles and overrides here
+
+// 1. Include our custom variables and overrides
+@import "abstracts/variables";
+@import "abstracts/mixins";
+@import "abstracts/utilities";
+
+// 2. Include our custom components
+@import "layout/header";
+@import "layout/sidebar";
+@import "layout/main";
+@import "layout/footer";
+
+@import "components/cards";
+@import "components/buttons";
+@import "components/forms";
+@import "components/tables";
+@import "components/navigation";
+@import "components/modals";
+@import "components/charts";
+@import "components/icons";
+@import "components/hamburger";
+@import "components/header-buttons";
+@import "components/toggle-switches";
+
+@import "pages/dashboard";
+@import "pages/login";
+@import "pages/errors";
+@import "pages/users";
+@import "pages/products";
+@import "pages/orders";
+@import "pages/reports";
+@import "pages/messages";
+@import "pages/calendar";
+@import "pages/files";
+@import "pages/analytics";
+@import "pages/settings";
+@import "pages/security";
+@import "pages/help";
+@import "pages/elements";
+
+// 3. Include theme variants
+@import "themes/dark";
+@import "themes/light"; 
