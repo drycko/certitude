@@ -44,7 +44,7 @@ class TenantSeeder extends Seeder
 		$tenant = Tenant::create([
 			'name' => 'Demo Exporter',
 			'tenancy_db_name' => $availableDb, // assign next available pre-created database (production only)
-			'email' => 'demo@example.com',
+			'email' => 'demo@demoexporter.com',
 			'phone' => '1234567890',
 			'logo' => null,
 			'address' => null,

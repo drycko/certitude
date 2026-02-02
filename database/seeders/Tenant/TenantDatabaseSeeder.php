@@ -19,12 +19,12 @@ class TenantDatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,  // Must be first - creates roles & permissions
             CompanySeeder::class,               // Creates companies
-            UserSeeder::class,                  // Creates users (depends on companies & roles)
-            CommoditySeeder::class,             // Creates commodities
+            CommoditySeeder::class,             // Creates commodities (needed by users)
             FboSeeder::class,                   // Creates FBOs
+            UserSeeder::class,                  // Creates users (depends on companies, roles & commodities)
             DocumentTypeSeeder::class,          // Creates document types
             UserGroupSeeder::class,             // Creates user groups
-            PowerbiTypeSeeder::class,           // Creates PowerBI link types
+            PowerbiLinkTypeSeeder::class,           // Creates PowerBI link types
         ]);
 
         $this->command->info('Tenant database seeded successfully!');

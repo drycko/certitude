@@ -198,12 +198,15 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'tenant'
+            ]);
         }
 
         // Create roles and assign permissions based on business requirements
         // Super user role with all permissions
-        $superRole = Role::firstOrCreate(['name' => 'super-user']);
+        $superRole = Role::firstOrCreate(['name' => 'super-user', 'guard_name' => 'tenant']);
         $superRole->syncPermissions(Permission::all());
         // give super-user role to the first user (assumed to be admin)
         // $adminUser = User::first();
@@ -212,7 +215,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Admin Role
         // - Main users: Upload/delete document for either a customer or grower
         // - Maintain master data
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'tenant']);
         $adminRole->syncPermissions(Permission::all());
                
         // Grower Role
@@ -220,9 +223,9 @@ class RolesAndPermissionsSeeder extends Seeder
         // - Can see PBI via unique identifier link (hide URL)
         // - DMS: Check assigned commodity types
         // - Show all public docs for those commodity types
-        // - Show all private docs based on Grower number
-        // - Can upload documents but only to Private space using doc type "Upload"
-        $growerRole = Role::firstOrCreate(['name' => 'grower']);
+        // - Show all private docs based on assigned growers
+        // - Only access grower portal with limited rights
+        $growerRole = Role::firstOrCreate(['name' => 'grower', 'guard_name' => 'tenant']);
         $growerRole->syncPermissions([
             'view documents',
             'view public documents',
@@ -244,7 +247,8 @@ class RolesAndPermissionsSeeder extends Seeder
         // - Must have one or more Commodity Type
         // - Can see any document uploaded as a Customer based on Commodity types assigned
         // - Can belong to multiple user groups for enhanced access
-        $customerRole = Role::firstOrCreate(['name' => 'customer']);
+        // - Only access customer portal with limited rights
+        $customerRole = Role::firstOrCreate(['name' => 'customer', 'guard_name' => 'tenant']);
         $customerRole->syncPermissions([
             // 'view documents',
             'view public documents',

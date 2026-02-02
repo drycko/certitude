@@ -2,10 +2,10 @@
 
 namespace Database\Seeders\Tenant;
 
-use App\Models\Tenant\PowerbiType;
+use App\Models\Tenant\PowerbiLinkType;
 use Illuminate\Database\Seeder;
 
-class PowerbiTypeSeeder extends Seeder
+class PowerbiLinkTypeSeeder extends Seeder
 {
   /**
    * Run the database seeds.
@@ -31,7 +31,7 @@ class PowerbiTypeSeeder extends Seeder
     ];
 
     foreach ($rootTypes as $typeData) {
-      PowerbiType::create($typeData);
+      PowerbiLinkType::create($typeData);
     }
   }
 }

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\UserManagement;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Company;
-use App\Models\Commodity;
-use Spatie\Permission\Models\Role;
+use App\Models\Tenant\User;
+use App\Models\Tenant\Company;
+use App\Models\Tenant\Commodity;
+use App\Models\Tenant\Role;
 use App\Traits\LogsUserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

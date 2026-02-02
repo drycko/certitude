@@ -5,6 +5,7 @@ namespace Database\Seeders\Tenant;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Commodity;
+use App\Models\Tenant\Grower;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,8 +18,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $devCompany = Company::where('name', 'like', 'Ukuyila%')->first();
-        $doleCompany = Company::where('name', 'like', 'Dole%')->first();
-        $growerCompany = Company::where('name', 'like', '%Grower%')->first();
+        $demoExporterCompany = Company::where('name', 'like', 'Demo Exporter%')->first();
+        $growerCompany = Company::where('name', 'like', 'Jan VD Merwe Farms%')->first();
         $customerCompany = Company::where('name', 'like', '%Customer%')->first();
 
         // Create Super Admin User(me)
@@ -42,16 +43,16 @@ class UserSeeder extends Seeder
         $admin->assignRole('super-user');
         $admin->commodities()->sync(Commodity::all());
 
-        // Create Dole Admin User
+        // Create Demo Exporter Admin User
         $admin = User::firstOrCreate([
-            'email' => 'admin@dolesa.co.za',
+            'email' => 'admin@demoexporter.com',
         ], [
             'name' => 'System Administrator',
             'first_name' => 'System',
             'last_name' => 'Administrator',
-            'email' => 'admin@dolesa.co.za',
+            'email' => 'admin@demoexporter.com',
             'password' => Hash::make('Admin123!'),
-            'company_id' => $doleCompany->id,
+            'company_id' => $demoExporterCompany->id,
             'is_active' => true,
             'email_verified_at' => now(),
             'password_changed_at' => now(),
@@ -64,16 +65,28 @@ class UserSeeder extends Seeder
         $admin->assignRole('admin');
         $admin->commodities()->sync(Commodity::all());
 
+        // create grower
+        $grower = Grower::firstOrCreate([
+            'name' => 'Jan VD Merwe Farms',
+            'grower_number' => 'GRW001',
+            'address' => '123 Farm Lane',
+            'contact_person' => 'Jan Van De Merwe',
+            'contact_email' => 'jan.vandemerwe@example.com',
+            'contact_phone' => '123-456-7890',
+            'notes' => 'Sample notes for the grower',
+            'created_by' => 1,
+        ]);
+
         // Create Grower User
-        $grower = User::firstOrCreate([
-            'email' => 'grower@example.com',
+        $growerUser = User::firstOrCreate([
+            'email' => 'grower@vandemerwefarms.com',
         ], [
-            'name' => 'John Grower',
-            'first_name' => 'John',
-            'last_name' => 'Grower',
+            'name' => 'Jan Van De Merwe',
+            'first_name' => 'Jan',
+            'last_name' => 'Van De Merwe',
             'password' => Hash::make('Grower123!'),
             'company_id' => $growerCompany->id,
-            'grower_number' => 'GRW001',
+            // 'grower_number' => 'GRW001',
             'is_active' => true,
             'email_verified_at' => now(),
             'must_change_password' => true,
@@ -83,10 +96,12 @@ class UserSeeder extends Seeder
                 'certification' => 'GlobalGAP'
             ]
         ]);
-        $grower->assignRole('grower');
-        $grower->commodities()->sync([1, 2]); // Table Grapes and Stone Fruit
+        $growerUser->assignRole('grower');
+        $growerUser->commodities()->sync([1, 2]); // Table Grapes and Stone Fruit
+        // insert into pivot table user_grower
+        $growerUser->growers()->sync([$grower->id]);
 
-        // Create Customer User
+        // Create Customer User (outside access to demo exporter guest portal)
         $customer = User::firstOrCreate([
             'email' => 'customer@example.com',
         ], [
@@ -107,15 +122,15 @@ class UserSeeder extends Seeder
         $customer->assignRole('customer');
         $customer->commodities()->sync([1, 3]); // Table Grapes and Citrus
 
-        // Create Dole User
-        $dole = User::firstOrCreate([
-            'email' => 'dole@dolesa.co.za',
+        // Create exporter guest User
+        $demoExporter = User::firstOrCreate([
+            'email' => 'user@guest.com',
         ], [
-            'name' => 'Dole Manager',
-            'first_name' => 'Dole',
-            'last_name' => 'Manager',
-            'password' => Hash::make('Dole123!'),
-            'company_id' => $doleCompany->id,
+            'name' => 'Guest User',
+            'first_name' => 'Guest',
+            'last_name' => 'User',
+            'password' => Hash::make('DemoExporter123!'),
+            'company_id' => $demoExporterCompany->id,
             'is_active' => true,
             'email_verified_at' => now(),
             'must_change_password' => true,
@@ -125,7 +140,7 @@ class UserSeeder extends Seeder
                 'responsibilities' => ['quality_control', 'compliance']
             ]
         ]);
-        $dole->assignRole('admin');
-        $dole->commodities()->sync(Commodity::all());
+        $demoExporter->assignRole('admin');
+        $demoExporter->commodities()->sync(Commodity::all());
     }
 }

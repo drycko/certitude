@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant\FileManager;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Document;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\DocumentType;
 use App\Models\Tenant\Commodity;
 use App\Models\Tenant\Fbo;
@@ -1180,7 +1181,7 @@ class DocumentController extends Controller
         $documentTypes = DocumentType::where('is_active', true)->orderBy('name')->get();
         $commodities = Commodity::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get();
         $fbos = $this->userAccessService->getAccessibleFbos($user)->orderBy('code')->get();
-        $companies = \App\Models\Company::where('is_active', true)->orderBy('name')->get();
+        $companies = Company::where('is_active', true)->orderBy('name')->get();
 
         // log activity
         $this->logUserActivity(

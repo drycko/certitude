@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\UserManagement;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Company;
-use App\Models\Commodity;
-use App\Models\UserGroup;
-use App\Models\Grower;
-use App\Models\Fbo;
-use App\Models\AccessRequest;
+use App\Models\Tenant\User;
+use App\Models\Tenant\Company;
+use App\Models\Tenant\Commodity;
+use App\Models\Tenant\UserGroup;
+use App\Models\Tenant\Grower;
+use App\Models\Tenant\Fbo;
+use App\Models\Tenant\AccessRequest;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

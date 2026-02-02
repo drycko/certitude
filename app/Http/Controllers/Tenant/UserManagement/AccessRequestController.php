@@ -4,12 +4,12 @@ namespace App\Http\Controllers\UserManagement;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\AccessRequest;
-use App\Models\User;
-use App\Models\Company;
-use App\Models\Commodity;
-use App\Models\Grower;
-use App\Models\UserGroup;
+use App\Models\Tenant\AccessRequest;
+use App\Models\Tenant\User;
+use App\Models\Tenant\Company;
+use App\Models\Tenant\Commodity;
+use App\Models\Tenant\Grower;
+use App\Models\Tenant\UserGroup;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;

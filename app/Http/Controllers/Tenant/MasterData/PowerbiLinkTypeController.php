@@ -106,7 +106,7 @@ class PowerbiLinkTypeController extends Controller
 
         // Apply sorting
         $query->orderBy($sortBy, $sortOrder);
-        $powerbiTypes = $query->paginate($filters['per_page']);
+        $PowerbiLinkTypes = $query->paginate($filters['per_page']);
 
         // filter options
         $attributeTypes = PowerbiLinkType::select('attribute_type')
@@ -117,7 +117,7 @@ class PowerbiLinkTypeController extends Controller
 
          $topLevelTypes = PowerbiLinkType::roots()->orderBy('name')->get();
 
-        return view('powerbi-link-types.index', compact('powerbiTypes', 'topLevelTypes', 'attributeTypes', 'filters'));
+        return view('powerbi-link-types.index', compact('PowerbiLinkTypes', 'topLevelTypes', 'attributeTypes', 'filters'));
     }
 
     /**
