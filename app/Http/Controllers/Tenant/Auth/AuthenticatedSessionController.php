@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Tenant\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Models\Tenant\TenantUserActivity;
+use App\Models\Tenant\UserActivity;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,10 +31,12 @@ class AuthenticatedSessionController extends Controller
         $user = auth()->guard('tenant')->user();
 
         // Log the login activity
-        TenantUserActivity::create([
-            'tenant_user_id' => $user->id,
-            'activity_type' => TenantUserActivity::ACTIVITY_TYPES['LOGIN'],
+        UserActivity::create([
+            'user_id' => $user->id,
+            'activity_type' => UserActivity::ACTIVITY_TYPES['LOGIN'],
             'description' => 'User logged in',
+            'subject_type' => 'App\Models\Tenant\User',
+            'subject_id' => $user->id,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'location' => $this->getLocationFromIp($request->ip()),
@@ -59,12 +61,15 @@ class AuthenticatedSessionController extends Controller
 
         // Log the logout activity
         if ($user) {
-            TenantUserActivity::create([
-                'tenant_user_id' => $user->id,
-                'activity_type' => TenantUserActivity::ACTIVITY_TYPES['LOGOUT'],
+            UserActivity::create([
+                'user_id' => $user->id,
+                'activity_type' => UserActivity::ACTIVITY_TYPES['LOGOUT'],
                 'description' => 'User logged out',
+                'subject_type' => 'App\Models\Tenant\User',
+                'subject_id' => $user->id,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
+                'location' => $this->getLocationFromIp($request->ip()),
             ]);
         }
 

@@ -6,12 +6,15 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
+use League\Flysystem\Filesystem;
+use App\Filesystem\UniformGCSAdapter;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -105,6 +108,9 @@ class TenancyServiceProvider extends ServiceProvider
         // $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+
+        // Register GCS custom driver
+        $this->registerGCSDriver();
     }
 
     protected function bootEvents()
@@ -154,5 +160,15 @@ class TenancyServiceProvider extends ServiceProvider
         foreach (array_reverse($tenancyMiddleware) as $middleware) {
             $this->app[\Illuminate\Contracts\Http\Kernel::class]->prependToMiddlewarePriority($middleware);
         }
+    }
+
+    // Register GCS custom driver
+    protected function registerGCSDriver()
+    {
+        Storage::extend('gcs', function ($app, $config) {
+            $adapter = new UniformGCSAdapter($config);
+            $filesystem = new Filesystem($adapter, $config);
+            return new \Illuminate\Filesystem\FilesystemAdapter($filesystem, $adapter, $config);
+        });
     }
 }

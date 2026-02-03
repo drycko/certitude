@@ -4,7 +4,7 @@ namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserGroupPowerBiLinkType extends Model
+class UserGroupPowerbiLinkType extends Model
 {
     // table
     protected $table = 'user_group_powerbi_link_types';
@@ -28,8 +28,8 @@ class UserGroupPowerBiLinkType extends Model
         return $this->belongsTo(UserGroup::class, 'user_group_id');
     }
 
-    public function powerBiLinkType()
+    public function powerbiLinkType()
     {
-        return $this->belongsTo(PowerBiLinkType::class, 'powerbi_link_type_id');
+        return $this->belongsTo(PowerbiLinkType::class, 'powerbi_link_type_id');
     }
 }

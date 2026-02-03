@@ -47,6 +47,17 @@ return [
             'report' => false,
         ],
 
+        'gcs' => [
+            'driver' => 'gcs',
+            'project_id' => env('GCS_PROJECT_ID'),
+            'key_file' => env('GCS_KEY_FILE'), // Path to service account JSON
+            'bucket' => env('GCS_BUCKET'),
+            'path_prefix' => env('GCS_PATH_PREFIX', ''),
+            'storage_api_uri' => env('GCS_STORAGE_API_URI'),
+            // 'visibility' => 'private',
+            // 'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -5,6 +5,9 @@ namespace App\Services\Tenant;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Grower;
 use App\Models\Tenant\Document;
+use App\Models\Tenant\DocumentType;
+use App\Models\Tenant\Commodity;
+use App\Models\Tenant\Fbo;
 use App\Models\Tenant\UserGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -376,7 +379,7 @@ class UserAccessService
     {
         if ($user->hasAnyPermission('manage all documents')) {
             // Admin, Super, and Dole users can access all commodities
-            return \App\Models\Tenant\Commodity::pluck('id')->toArray();
+            return Commodity::pluck('id')->toArray();
         }
 
         return $user->commodities->pluck('id')->toArray();
@@ -389,7 +392,7 @@ class UserAccessService
     {
         if ($user->hasAnyPermission('manage all documents')) {
             // Admin, Super, and Dole users can access all commodities
-            return \App\Models\Tenant\Commodity::where('is_active', true)
+            return Commodity::where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderBy('name')
                 ->get();
@@ -690,7 +693,7 @@ class UserAccessService
      */
     public function getAccessibleFbos(User $user): Builder
     {
-        $query = \App\Models\Fbo::query();
+        $query = Fbo::query();
 
         // If user has 'manage all fbos' permission, return all
         if ($user->hasAnyPermission('manage all fbos')) {
@@ -725,7 +728,7 @@ class UserAccessService
      */
     public function getAccessibleCommoditiesForUser(User $user): Builder
     {
-        $query = \App\Models\Tenant\Commodity::query()->where('is_active', true);
+        $query = Commodity::query()->where('is_active', true);
 
         // If user has 'manage all commodities' permission, return all
         if ($user->hasAnyPermission('edit commodities')) {
@@ -755,7 +758,7 @@ class UserAccessService
      */
     public function getAccessibleDocumentTypes(User $user, bool $isSubDocumentType): Builder
     {
-        $query = \App\Models\DocumentType::query()->where('is_active', true);
+        $query = DocumentType::query()->where('is_active', true);
         if ($isSubDocumentType) {
             $query->whereNotNull('parent_id');
         } else {
@@ -800,7 +803,7 @@ class UserAccessService
 
     public function getAccessibleSubDocumentTypes(User $user): Builder
     {
-        $query = \App\Models\DocumentType::query()->where('is_active', true)->whereNotNull('parent_id');
+        $query = DocumentType::query()->where('is_active', true)->whereNotNull('parent_id');
 
         // If user has 'manage all documents' permission, return all
         if ($user->hasAnyPermission('manage all documents')) {

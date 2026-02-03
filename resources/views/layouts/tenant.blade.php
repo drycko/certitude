@@ -1,159 +1,722 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="zxx">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ config('app.name') }} - Tenant Portal">
-    <meta name="author" content="{{ config('app.name') }}">
-    
-    <title>@yield('title', 'Dashboard') - {{ config('app.name') }}</title>
-    
-    <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    <!-- Metis Admin CSS -->
-    <link rel="stylesheet" href="{{ asset('vendor/metis-admin/dist-modern/assets/main-BQhM7myw.css') }}">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('asset/images/favicon.ico') }}"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('asset/images/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('asset/images/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('asset/images/favicon-16x16.png') }}">
-    
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#6366f1">
-    
-    @stack('styles')
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="author" content="theme_ocean">
+    <!--! The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags !-->
+    <!--! BEGIN: Apps Title-->
+    <title>{{ config('app.name') }} - @yield('page-title')</title>
+    <!--! END:  Apps Title-->
+    {{-- favicon --}}
+    <!--! BEGIN: Favicon-->
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon/favicon.ico') }}">
+    <!--! END: Favicon-->
+    {{-- <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon/favicon.ico') }}"/> --}}
+
+    {{-- bootstrap icons --}}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('assets/images/favicon/site.webmanifest') }}">
+    <!--! END: Favicon-->
+    <!--! BEGIN: Bootstrap CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/duralux-admin/assets/css/bootstrap.min.css') }}">
+    <!--! END: Bootstrap CSS-->
+    <!--! BEGIN: Vendors CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/duralux-admin/assets/vendors/css/vendors.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/duralux-admin/assets/vendors/css/daterangepicker.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/duralux-admin/assets/vendors/css/jquery-jvectormap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/duralux-admin/assets/vendors/css/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/duralux-admin/assets/vendors/css/select2-theme.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/duralux-admin/assets/vendors/css/jquery.time-to.min.css') }}">
+    <!--! END: Vendors CSS-->
+    <!--! BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/duralux-admin/assets/css/theme.min.css') }}">
+    <!--! END: Custom CSS-->
+    <style>
+        /* Ensure footer sticks to bottom */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .nxl-navigation {
+            flex-shrink: 0;
+        }
+        .nxl-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 100%;
+        }
+        .nxl-content {
+            
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content {
+            flex: 1;
+            height: auto !important;
+            min-height: auto !important;
+        }
+        .footer {
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+    </style>
+    <!--! HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries !-->
+    <!--! WARNING: Respond.js doesn"t work if you view the page via file: !-->
+    <!--[if lt IE 9]>
+			<script src="https:oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https:oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
 </head>
-<body data-page="dashboard" class="admin-layout">
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
-        <div class="loading-spinner">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+
+<body>
+    <!--! ================================================================ !-->
+    <!--! [Start] Navigation Manu !-->
+    <!--! ================================================================ !-->
+    <nav class="nxl-navigation">
+        <div class="navbar-wrapper">
+            <div class="m-header">
+                <a href="{{ route('dashboard') }}" class="b-brand">
+                    <!-- ========   change your logo hear   ============ -->
+                    <img src="{{ asset('assets/images/certitude-logo-140.png') }}" alt="" class="logo logo-lg">
+                    <img src="{{ asset('assets/images/certitude-logo-icon-abbr.png') }}" alt="" class="logo logo-sm">
+                </a>
+            </div>
+            <div class="navbar-content">
+                <ul class="nxl-navbar">
+                    <li class="nxl-item nxl-caption">
+                        <label>Navigation</label>
+                    </li>
+                    <li class="nxl-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-airplay"></i></span>
+                            <span class="nxl-mtext">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-folder"></i></span>
+                            <span class="nxl-mtext">Files</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item {{ request()->routeIs('documents.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('documents.index') }}">All Files</a></li>
+                            <li class="nxl-item {{ request()->routeIs('documents.create') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('documents.create') }}">Upload</a></li>
+                            <li class="nxl-item {{ request()->routeIs('trashed-data.documents.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('trashed-data.documents.index') }}">Trash</a></li>
+                        </ul>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-bar-chart-2"></i></span>
+                            <span class="nxl-mtext">PowerBi</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item {{ request()->routeIs('powerbi-links.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('powerbi-links.index') }}">All Reports</a></li>
+                            <li class="nxl-item {{ request()->routeIs('powerbi-links.create') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('powerbi-links.create') }}">Add New</a></li>
+                            <li class="nxl-item {{ request()->routeIs('trashed-data.powerbi-links.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('trashed-data.powerbi-links.index') }}">Trash</a></li>
+                        </ul>
+                    </li>
+                    {{-- <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-users"></i></span>
+                            <span class="nxl-mtext">Users</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="customers.html">All Users</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="customers-create.html">Create</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="reports-leads.html">Trash</a></li>
+                        </ul>
+                    </li> --}}
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-mtext">Customers</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="#">All Customers</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="#">Create</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="#">Trash</a></li>
+                        </ul>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-alert-circle"></i></span>
+                            <span class="nxl-mtext">Access Control</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item {{ request()->routeIs('users') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('users.index') }}">Users</a></li>
+                            <li class="nxl-item {{ request()->routeIs('roles') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('roles.index') }}">Roles</a></li>
+                            <li class="nxl-item {{ request()->routeIs('permissions') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('permissions.index') }}">Permissions</a></li>
+                        </ul>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-layout"></i></span>
+                            <span class="nxl-mtext">Master Data</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item {{ request()->routeIs('master-data.companies.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.companies.index') }}">Companies</a></li>
+                            <li class="nxl-item {{ request()->routeIs('master-data.varieties.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.varieties.index') }}">Crop Varieties</a></li>
+                            <li class="nxl-item {{ request()->routeIs('master-data.document-types.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.document-types.index') }}">Folders</a></li>
+                            <li class="nxl-item {{ request()->routeIs('master-data.fbos.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.fbos.index') }}">FBOs</a></li>
+                            <li class="nxl-item {{ request()->routeIs('master-data.growers.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.growers.index') }}">Growers</a></li>
+                            <li class="nxl-item {{ request()->routeIs('master-data.commodities.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.commodities.index') }}">Commodities</a></li>
+                            <li class="nxl-item {{ request()->routeIs('master-data.powerbi-link-types.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.powerbi-link-types.index') }}">PowerBi Types</a></li>
+                            <li class="nxl-item {{ request()->routeIs('master-data.vessels.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.vessels.index') }}">Vessels</a></li>
+                        </ul>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-settings"></i></span>
+                            <span class="nxl-mtext">Settings</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="#">General</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-life-buoy"></i></span>
+                            <span class="nxl-mtext">Help Center</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="#!">Support</a></li>
+                            <li class="nxl-item {{ request()->routeIs('knowledge-base') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('knowledge-base') }}">KnowledgeBase</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="/docs/documentations">Documentations</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="feather-life-buoy fs-4 text-dark"></i>
+                        <h6 class="mt-4 text-dark fw-bolder">Request a Feature</h6>
+                        <p class="fs-11 my-3 text-dark">To request a new feature, please contact our support team.</p>
+                        <a href="mailto:{{ config('developer.email') }}" target="_blank" class="btn btn-primary text-dark w-100">Contact Support</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- Main Wrapper -->
-    <div class="admin-wrapper" id="admin-wrapper">
-        
-        <!-- Header -->
-        <header class="admin-header">
-            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-                <div class="container-fluid">
-                    <!-- Logo/Brand -->
-                    <a class="navbar-brand d-flex align-items-center" href="{{ route('dashboard') }}">
-                        <h1 class="h4 mb-0 fw-bold text-primary">{{ config('app.name') }}</h1>
-                    </a>
-
-                    <!-- Sidebar Toggle -->
-                    <button class="hamburger-menu" type="button" data-sidebar-toggle aria-label="Toggle sidebar">
-                        <i class="bi bi-list"></i>
-                    </button>
-
-                    <!-- Search Bar -->
-                    <div class="search-container flex-grow-1 mx-4">
-                        <div class="position-relative">
-                            <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-                            <i class="bi bi-search position-absolute top-50 end-0 translate-middle-y me-3"></i>
+    </nav>
+    <!--! ================================================================ !-->
+    <!--! [End]  Navigation Manu !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Header !-->
+    <!--! ================================================================ !-->
+    <header class="nxl-header">
+        <div class="header-wrapper">
+            <!--! [Start] Header Left !-->
+            <div class="header-left d-flex align-items-center gap-4">
+                <!--! [Start] nxl-head-mobile-toggler !-->
+                <a href="javascript:void(0);" class="nxl-head-mobile-toggler" id="mobile-collapse">
+                    <div class="hamburger hamburger--arrowturn">
+                        <div class="hamburger-box">
+                            <div class="hamburger-inner"></div>
                         </div>
                     </div>
-
-                    <!-- Right Side Icons -->
-                    <div class="navbar-nav flex-row align-items-center">
-                        <!-- Notifications -->
-                        <div class="nav-item dropdown me-2">
-                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-bell fs-5"></i>
-                                <span class="badge bg-danger badge-sm">3</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><h6 class="dropdown-header">Notifications</h6></li>
-                                <li><a class="dropdown-item" href="#">New document uploaded</a></li>
-                                <li><a class="dropdown-item" href="#">User registration pending</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-center" href="#">View all</a></li>
-                            </ul>
+                </a>
+                <!--! [Start] nxl-head-mobile-toggler !-->
+                <!--! [Start] nxl-navigation-toggle !-->
+                <div class="nxl-navigation-toggle">
+                    <a href="javascript:void(0);" id="menu-mini-button">
+                        <i class="feather-align-left"></i>
+                    </a>
+                    <a href="javascript:void(0);" id="menu-expend-button" style="display: none">
+                        <i class="feather-arrow-right"></i>
+                    </a>
+                </div>
+                
+            </div>
+            <!--! [End] Header Left !-->
+            <!--! [Start] Header Right !-->
+            <div class="header-right ms-auto">
+                <div class="d-flex align-items-center">
+                    <div class="dropdown nxl-h-item nxl-header-search">
+                        <a href="javascript:void(0);" class="nxl-head-link me-0" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                            <i class="feather-search"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-search-dropdown">
+                            <div class="input-group search-form">
+                                <span class="input-group-text">
+                                    <i class="feather-search fs-6 text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control search-input-field" placeholder="Search....">
+                                <span class="input-group-text">
+                                    <button type="button" class="btn-close"></button>
+                                </span>
+                            </div>
+                            <div class="dropdown-divider mt-0"></div>
+                            <div class="search-items-wrapper">
+                                <div class="searching-for px-4 py-2">
+                                    <p class="fs-11 fw-medium text-muted">I'm searching for...</p>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Projects</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Leads</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Contacts</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Inbox</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Invoices</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Tasks</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Customers</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Notes</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Affiliate</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Storage</a>
+                                        <a href="javascript:void(0);" class="flex-fill border rounded py-1 px-2 text-center fs-11 fw-semibold">Calendar</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                
+                            </div>
                         </div>
-
-                        <!-- User Dropdown -->
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->guard('tenant')->user()->name) }}&background=6366f1&color=fff" 
-                                     alt="User" class="rounded-circle me-2" width="32" height="32">
-                                <span>{{ auth()->guard('tenant')->user()->name }}</span>
+                    </div>
+                    <div class="dropdown nxl-h-item nxl-header-language d-none d-sm-flex">
+                        <a href="javascript:void(0);" class="nxl-head-link me-0 nxl-language-link" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                            <img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/4x3/za.svg') }}" alt="" class="img-fluid wd-20">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-language-dropdown">
+                            <div class="dropdown-divider mt-0"></div>
+                            <div class="language-items-wrapper">
+                                <div class="select-language px-4 py-2 hstack justify-content-between gap-4">
+                                    <div class="lh-lg">
+                                        <h6 class="mb-0">Select Language</h6>
+                                        <p class="fs-11 text-muted mb-0">12 languages avaiable!</p>
+                                    </div>
+                                    <a href="javascript:void(0);" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Add Language">
+                                        <i class="feather-plus"></i>
+                                    </a>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="row px-4 pt-3">
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/sa.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Arabic</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/bd.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Bengali</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/ch.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Chinese</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/nl.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Dutch</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select active">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/us.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>English</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/fr.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>French</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/de.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>German</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/in.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Hindi</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/ru.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Russian</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/es.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Spanish</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/tr.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Turkish</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-6 language_select">
+                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/pk.svg') }}" alt="" class="img-fluid"></div>
+                                            <span>Urdo</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nxl-h-item d-none d-sm-flex">
+                        <div class="full-screen-switcher">
+                            <a href="javascript:void(0);" class="nxl-head-link me-0" onclick="$('body').fullScreenHelper('toggle');">
+                                <i class="feather-maximize maximize"></i>
+                                <i class="feather-minimize minimize"></i>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{{ route('dashboard.profile') }}">
-                                    <i class="bi bi-person me-2"></i>Profile
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form method="POST" action="{{ route('tenant.logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">
-                                            <i class="bi bi-box-arrow-right me-2"></i>Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
+                        </div>
+                    </div>
+                    <div class="nxl-h-item dark-light-theme">
+                        <a href="javascript:void(0);" class="nxl-head-link me-0 dark-button">
+                            <i class="feather-moon"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="nxl-head-link me-0 light-button" style="display: none">
+                            <i class="feather-sun"></i>
+                        </a>
+                    </div>
+                    <div class="dropdown nxl-h-item">
+                        <a href="javascript:void(0);" class="nxl-head-link me-0" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
+                            <i class="feather-clock"></i>
+                            <span class="badge bg-success nxl-h-badge">2</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-timesheets-menu">
+                            <div class="d-flex justify-content-between align-items-center timesheets-head">
+                                <h6 class="fw-bold text-dark mb-0">Timesheets</h6>
+                                <a href="javascript:void(0);" class="fs-11 text-success text-end ms-auto" data-bs-toggle="tooltip" title="Upcomming Timers">
+                                    <i class="feather-clock"></i>
+                                    <span>3 Upcomming</span>
+                                </a>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center flex-column timesheets-body">
+                                <i class="feather-clock fs-1 mb-4"></i>
+                                <p class="text-muted">No started timers found yes!</p>
+                                <a href="javascript:void(0);" class="btn btn-sm btn-primary">Started Timer</a>
+                            </div>
+                            <div class="text-center timesheets-footer">
+                                <a href="javascript:void(0);" class="fs-13 fw-semibold text-dark">Alls Timesheets</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown nxl-h-item">
+                        <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="outside">
+                            <i class="feather-bell"></i>
+                            <span class="badge bg-danger nxl-h-badge">3</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
+                            <div class="d-flex justify-content-between align-items-center notifications-head">
+                                <h6 class="fw-bold text-dark mb-0">Notifications</h6>
+                                <a href="javascript:void(0);" class="fs-11 text-success text-end ms-auto" data-bs-toggle="tooltip" title="Make as Read">
+                                    <i class="feather-check"></i>
+                                    <span>Make as Read</span>
+                                </a>
+                            </div>
+                            <div class="notifications-item">
+                                <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/2.png') }}" alt="" class="rounded me-3 border">
+                                <div class="notifications-desc">
+                                    <a href="javascript:void(0);" class="font-body text-truncate-2-line"> <span class="fw-semibold text-dark">Malanie Hanvey</span> We should talk about that at lunch!</a>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="notifications-date text-muted border-bottom border-bottom-dashed">2 minutes ago</div>
+                                        <div class="d-flex align-items-center float-end gap-2">
+                                            <a href="javascript:void(0);" class="d-block wd-8 ht-8 rounded-circle bg-gray-300" data-bs-toggle="tooltip" title="Make as Read"></a>
+                                            <a href="javascript:void(0);" class="text-danger" data-bs-toggle="tooltip" title="Remove">
+                                                <i class="feather-x fs-12"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notifications-item">
+                                <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/3.png') }}" alt="" class="rounded me-3 border">
+                                <div class="notifications-desc">
+                                    <a href="javascript:void(0);" class="font-body text-truncate-2-line"> <span class="fw-semibold text-dark">Valentine Maton</span> You can download the latest invoices now.</a>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="notifications-date text-muted border-bottom border-bottom-dashed">36 minutes ago</div>
+                                        <div class="d-flex align-items-center float-end gap-2">
+                                            <a href="javascript:void(0);" class="d-block wd-8 ht-8 rounded-circle bg-gray-300" data-bs-toggle="tooltip" title="Make as Read"></a>
+                                            <a href="javascript:void(0);" class="text-danger" data-bs-toggle="tooltip" title="Remove">
+                                                <i class="feather-x fs-12"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notifications-item">
+                                <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/4.png') }}" alt="" class="rounded me-3 border">
+                                <div class="notifications-desc">
+                                    <a href="javascript:void(0);" class="font-body text-truncate-2-line"> <span class="fw-semibold text-dark">Archie Cantones</span> Don't forget to pickup Jeremy after school!</a>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="notifications-date text-muted border-bottom border-bottom-dashed">53 minutes ago</div>
+                                        <div class="d-flex align-items-center float-end gap-2">
+                                            <a href="javascript:void(0);" class="d-block wd-8 ht-8 rounded-circle bg-gray-300" data-bs-toggle="tooltip" title="Make as Read"></a>
+                                            <a href="javascript:void(0);" class="text-danger" data-bs-toggle="tooltip" title="Remove">
+                                                <i class="feather-x fs-12"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center notifications-footer">
+                                <a href="javascript:void(0);" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown nxl-h-item">
+                        <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
+                            <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/1.png') }}" alt="user-image" class="img-fluid user-avtar me-0">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
+                            <div class="dropdown-header">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/1.png') }}" alt="user-image" class="img-fluid user-avtar">
+                                    <div>
+                                        <h6 class="text-dark mb-0">Alexandra Della <span class="badge bg-soft-success text-success ms-1">PRO</span></h6>
+                                        <span class="fs-12 fw-medium text-muted">alex@example.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="dropdown">
+                                    <span class="hstack">
+                                        <i class="wd-10 ht-10 border border-2 border-gray-1 bg-success rounded-circle me-2"></i>
+                                        <span>Active</span>
+                                    </span>
+                                    <i class="feather-chevron-right ms-auto me-0"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-warning rounded-circle me-2"></i>
+                                            <span>Always</span>
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-success rounded-circle me-2"></i>
+                                            <span>Active</span>
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-danger rounded-circle me-2"></i>
+                                            <span>Bussy</span>
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-info rounded-circle me-2"></i>
+                                            <span>Inactive</span>
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-dark rounded-circle me-2"></i>
+                                            <span>Disabled</span>
+                                        </span>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-primary rounded-circle me-2"></i>
+                                            <span>Cutomization</span>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="dropdown">
+                                    <span class="hstack">
+                                        <i class="feather-dollar-sign me-2"></i>
+                                        <span>Subscriptions</span>
+                                    </span>
+                                    <i class="feather-chevron-right ms-auto me-0"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
+                                            <span>Plan</span>
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
+                                            <span>Billings</span>
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
+                                            <span>Referrals</span>
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
+                                            <span>Payments</span>
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
+                                            <span>Statements</span>
+                                        </span>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <span class="hstack">
+                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
+                                            <span>Subscriptions</span>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="feather-user"></i>
+                                <span>Profile Details</span>
+                            </a>
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="feather-activity"></i>
+                                <span>Activity Feed</span>
+                            </a>
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="feather-dollar-sign"></i>
+                                <span>Billing Details</span>
+                            </a>
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="feather-bell"></i>
+                                <span>Notifications</span>
+                            </a>
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="feather-settings"></i>
+                                <span>Account Settings</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="./auth-login-minimal.html" class="dropdown-item">
+                                <i class="feather-log-out"></i>
+                                <span>Logout</span>
+                            </a>
                         </div>
                     </div>
                 </div>
-            </nav>
-        </header>
-
-        <!-- Sidebar -->
-        <aside class="admin-sidebar" id="admin-sidebar">
-            <nav class="sidebar-nav">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                            <i class="bi bi-speedometer2"></i>
-                            <span>Dashboard</span>
+            </div>
+            <!--! [End] Header Right !-->
+        </div>
+    </header>
+    <!--! ================================================================ !-->
+    <!--! [End] Header !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Main Content !-->
+    <!--! ================================================================ !-->
+    @if(request()->routeIs('documents.*'))
+    <main class="nxl-container apps-container apps-storage">
+        <div class="nxl-content without-header nxl-full-content">
+            <!-- [ Main Content ] start -->
+            <div class="main-content d-flex">
+    @else
+    <main class="nxl-container">
+        <div class="nxl-content">
+            @if(View::hasSection('page-title') || View::hasSection('breadcrumb'))
+            <!-- [ page-header ] start -->
+            <div class="page-header">
+                <div class="page-header-left d-flex align-items-center">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">Dashboard</h5>
+                    </div>
+                    <ul class="breadcrumb">
+                        @yield('breadcrumb')
+                    </ul>
+                </div>
+                <div class="page-header-right ms-auto">
+                    <div class="page-header-right-items">
+                        <div class="d-flex d-md-none">
+                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                                <i class="feather-arrow-left me-2"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                            <div id="reportrange" class="reportrange-picker d-flex align-items-center">
+                                <span class="reportrange-picker-field"></span>
+                            </div>
+                            <div class="dropdown filter-dropdown">
+                                <a class="btn btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
+                                    <i class="feather-filter me-2"></i>
+                                    <span>Filter</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Role" checked="checked">
+                                            <label class="custom-control-label c-pointer" for="Role">Role</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Team" checked="checked">
+                                            <label class="custom-control-label c-pointer" for="Team">Team</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Email" checked="checked">
+                                            <label class="custom-control-label c-pointer" for="Email">Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Member" checked="checked">
+                                            <label class="custom-control-label c-pointer" for="Member">Member</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Recommendation" checked="checked">
+                                            <label class="custom-control-label c-pointer" for="Recommendation">Recommendation</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-plus me-3"></i>
+                                        <span>Create New</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-filter me-3"></i>
+                                        <span>Manage Filter</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-md-none d-flex align-items-center">
+                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                            <i class="feather-align-right fs-20"></i>
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('documents.*') ? 'active' : '' }}" href="{{ route('documents.index') }}">
-                            <i class="bi bi-file-earmark-text"></i>
-                            <span>Documents</span>
-                        </a>
-                    </li>
-                    @can('view users')
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
-                            <i class="bi bi-people"></i>
-                            <span>Users</span>
-                        </a>
-                    </li>
-                    @endcan
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}" href="#">
-                            <i class="bi bi-graph-up"></i>
-                            <span>Reports</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tenant.settings.index') }}">
-                            <i class="bi bi-gear"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="admin-content">
-            <div class="content-wrapper">
+                    </div>
+                </div>
+            </div>
+            <!-- [ page-header ] end -->
+            @endif
+            <!-- [ Main Content ] start -->
+            <div class="main-content">
+    @endif
                 <!-- Flash Messages -->
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -179,11 +742,561 @@
                 <!-- Page Content -->
                 @yield('content')
             </div>
-        </main>
+            <!-- [ Main Content ] end -->
+        </div>
+        <!-- [ Footer ] start -->
+        <footer class="footer">
+            <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
+                <span>Copyright ©</span>
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+            </p>
+            <p><span>By: <a target="_blank" href="https://github.com/drycko" target="_blank">{{ config('app.name') }}</a></span> • <span>Distributed by: <a target="_blank" href="https://ukuyila.com" target="_blank">Ukuyila Consult</a></span></p>
+            <div class="d-flex align-items-center gap-4">
+                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
+                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
+                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+            </div>
+        </footer>
+        <!-- [ Footer ] end -->
+    </main>
+    <!--! ================================================================ !-->
+    <!--! [End] Main Content !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Search Modal !-->
+    <!--! ================================================================ !-->
+    <div class="modal fade-scale" id="searchModal" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-top modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header search-form py-0">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="feather-search fs-4 text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control search-input-field" placeholder="Search...">
+                        <span class="input-group-text">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="searching-for mb-5">
+                        <h4 class="fs-13 fw-normal text-gray-600 mb-3">I'm searching for...</h4>
+                        <div class="row g-1">
+                            <div class="col-md-4 col-xl-2">
+                                <a href="javascript:void(0);" class="d-flex align-items-center gap-2 px-3 lh-lg border rounded-pill">
+                                    <i class="feather-compass"></i>
+                                    <span>Recent</span>
+                                </a>
+                            </div>
+                            <div class="col-md-4 col-xl-2">
+                                <a href="javascript:void(0);" class="d-flex align-items-center gap-2 px-3 lh-lg border rounded-pill">
+                                    <i class="feather-command"></i>
+                                    <span>Command</span>
+                                </a>
+                            </div>
+                            <div class="col-md-4 col-xl-2">
+                                <a href="javascript:void(0);" class="d-flex align-items-center gap-2 px-3 lh-lg border rounded-pill">
+                                    <i class="feather-users"></i>
+                                    <span>Peoples</span>
+                                </a>
+                            </div>
+                            <div class="col-md-4 col-xl-2">
+                                <a href="javascript:void(0);" class="d-flex align-items-center gap-2 px-3 lh-lg border rounded-pill">
+                                    <i class="feather-file"></i>
+                                    <span>Files</span>
+                                </a>
+                            </div>
+                            <div class="col-md-4 col-xl-2">
+                                <a href="javascript:void(0);" class="d-flex align-items-center gap-2 px-3 lh-lg border rounded-pill">
+                                    <i class="feather-video"></i>
+                                    <span>Medias</span>
+                                </a>
+                            </div>
+                            <div class="col-md-4 col-xl-2">
+                                <a href="javascript:void(0);" class="d-flex align-items-center gap-2 px-3 lh-lg border rounded-pill">
+                                    <span>More</span>
+                                    <i class="feather-chevron-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recent-result mb-5">
+                        <h4 class="fs-13 fw-normal text-gray-600 mb-3">Recnet <span class="badge small bg-gray-200 rounded ms-1 text-dark">3</span></h4>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-airplay fs-5"></i>
+                                <div class="fs-13 fw-semibold">CRM dashboard redesign</div>
+                            </a>
+                            <a href="javascript:void(0);" class="badge border rounded text-dark">/<i class="feather-command ms-1 fs-12"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-file-plus fs-5"></i>
+                                <div class="fs-13 fw-semibold">Create new eocument</div>
+                            </a>
+                            <a href="javascript:void(0);" class="badge border rounded text-dark">N /<i class="feather-command ms-1 fs-12"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-user-plus fs-5"></i>
+                                <div class="fs-13 fw-semibold">Invite project colleagues</div>
+                            </a>
+                            <a href="javascript:void(0);" class="badge border rounded text-dark">P /<i class="feather-command ms-1 fs-12"></i></a>
+                        </div>
+                    </div>
+                    <div class="command-result mb-5">
+                        <h4 class="fs-13 fw-normal text-gray-600 mb-3">Command <span class="badge small bg-gray-200 rounded ms-1 text-dark">5</span></h4>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-user fs-5"></i>
+                                <div class="fs-13 fw-semibold">My profile</div>
+                            </a>
+                            <a href="javascript:void(0);" class="badge border rounded text-dark">P /<i class="feather-command ms-1 fs-12"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-users fs-5"></i>
+                                <div class="fs-13 fw-semibold">Team profile</div>
+                            </a>
+                            <a href="javascript:void(0);" class="badge border rounded text-dark">T /<i class="feather-command ms-1 fs-12"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-user-plus fs-5"></i>
+                                <div class="fs-13 fw-semibold">Invite colleagues</div>
+                            </a>
+                            <a href="javascript:void(0);" class="badge border rounded text-dark">I /<i class="feather-command ms-1 fs-12"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-briefcase fs-5"></i>
+                                <div class="fs-13 fw-semibold">Create new project</div>
+                            </a>
+                            <a href="javascript:void(0);" class="badge border rounded text-dark">CP /<i class="feather-command ms-1 fs-12"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-life-buoy fs-5"></i>
+                                <div class="fs-13 fw-semibold">Support center</div>
+                            </a>
+                            <a href="javascript:void(0);" class="badge border rounded text-dark">SC /<i class="feather-command ms-1 fs-12"></i></a>
+                        </div>
+                    </div>
+                    <div class="file-result mb-4">
+                        <h4 class="fs-13 fw-normal text-gray-600 mb-3">Files <span class="badge small bg-gray-200 rounded ms-1 text-dark">3</span></h4>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-folder-plus fs-5"></i>
+                                <div class="fs-13 fw-semibold">CRM Desing Project <span class="fs-12 fw-normal text-muted">(56.74 MB)</span></div>
+                            </a>
+                            <a href="javascript:void(0);" class="file-download"><i class="feather-download"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-folder-plus fs-5"></i>
+                                <div class="fs-13 fw-semibold">Admin Dashboard Project <span class="fs-12 fw-normal text-muted">(46.83 MB)</span></div>
+                            </a>
+                            <a href="javascript:void(0);" class="file-download"><i class="feather-download"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <a href="javascript:void(0);" class="d-flex align-items-start gap-3">
+                                <i class="feather-folder-plus fs-5"></i>
+                                <div class="fs-13 fw-semibold">CRM Dashboard Project <span class="fs-12 fw-normal text-muted">(68.59 MB)</span></div>
+                            </a>
+                            <a href="javascript:void(0);" class="file-download"><i class="feather-download"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--! ================================================================ !-->
+    <!--! [End] Search Modal !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Language Select !-->
+    <!--! ================================================================ !-->
+    <div class="modal fade-scale" id="languageSelectModal" aria-hidden="true" aria-labelledby="languageSelectModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="languageSelectModalLabel">Select Language</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/sa.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Arabic </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/bd.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Bengali </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/ch.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Chinese </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/hr.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Croatian </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/dk.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Danish </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/nl.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Dutch </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select active">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/us.svg') }}" alt="" class="img-fluid"></div>
+                                <span>English </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/fi.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Filipino </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/fr.svg') }}" alt="" class="img-fluid"></div>
+                                <span>French </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/de.svg') }}" alt="" class="img-fluid"></div>
+                                <span>German </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/il.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Hebrew </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/in.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Hindi </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/id.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Indonesian </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/it.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Italian </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/jp.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Japanese </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/kr.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Korean </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/ir.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Persian </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/pt.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Portuguese </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/ru.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Russian </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/es.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Spanish </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/sv.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Swedish </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/tr.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Turkish </span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/pk.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Urdo</span>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3 language_select">
+                            <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                <div class="avatar-image avatar-sm"><img src="{{ asset('vendor/duralux-admin/assets/vendors/img/flags/1x1/vi.svg') }}" alt="" class="img-fluid"></div>
+                                <span>Vietnamese</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--! ================================================================ !-->
+    <!--! [End] Language Select !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! BEGIN: Downloading Toast !-->
+    <!--! ================================================================ !-->
+    <div class="position-fixed" style="right: 5px; bottom: 5px; z-index: 999999">
+        <div id="toast" class="toast bg-black hide" data-bs-delay="3000" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header px-3 bg-transparent d-flex align-items-center justify-content-between border-bottom border-light border-opacity-10">
+                <div class="text-white mb-0 mr-auto">Downloading...</div>
+                <a href="javascript:void(0)" class="ms-2 mb-1 close fw-normal" data-bs-dismiss="toast" aria-label="Close">
+                    <span class="text-white">&times;</span>
+                </a>
+            </div>
+            <div class="toast-body p-3 text-white">
+                <h6 class="fs-13 text-white">Project.zip</h6>
+                <span class="text-light fs-11">4.2mb of 5.5mb</span>
+            </div>
+            <div class="toast-footer p-3 pt-0 border-top border-light border-opacity-10">
+                <div class="progress mt-3" style="height: 5px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated w-75 bg-dark" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--! ================================================================ !-->
+    <!--! END: Downloading Toast !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! BEGIN: Theme Customizer !-->
+    <!--! ================================================================ !-->
+    <div class="theme-customizer">
+        <div class="customizer-handle">
+            <a href="javascript:void(0);" class="cutomizer-open-trigger bg-primary">
+                <i class="feather-settings"></i>
+            </a>
+        </div>
+        <div class="customizer-sidebar-wrapper">
+            <div class="customizer-sidebar-header px-4 ht-80 border-bottom d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">Theme Settings</h5>
+                <a href="javascript:void(0);" class="cutomizer-close-trigger d-flex">
+                    <i class="feather-x"></i>
+                </a>
+            </div>
+            <div class="customizer-sidebar-body position-relative p-4" data-scrollbar-target="#psScrollbarInit">
+                <!--! BEGIN: [Navigation] !-->
+                <div class="position-relative px-3 pb-3 pt-4 mt-3 mb-5 border border-gray-2 theme-options-set">
+                    <label class="py-1 px-2 fs-8 fw-bold text-uppercase text-muted text-spacing-2 bg-white border border-gray-2 position-absolute rounded-2 options-label" style="top: -12px">Navigation</label>
+                    <div class="row g-2 theme-options-items app-navigation" id="appNavigationList">
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-navigation-light" name="app-navigation" value="1" data-app-navigation="app-navigation-light" checked>
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-navigation-light">Light</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-navigation-dark" name="app-navigation" value="2" data-app-navigation="app-navigation-dark">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-navigation-dark">Dark</label>
+                        </div>
+                    </div>
+                </div>
+                <!--! END: [Navigation] !-->
+                <!--! BEGIN: [Header] !-->
+                <div class="position-relative px-3 pb-3 pt-4 mt-3 mb-5 border border-gray-2 theme-options-set mt-5">
+                    <label class="py-1 px-2 fs-8 fw-bold text-uppercase text-muted text-spacing-2 bg-white border border-gray-2 position-absolute rounded-2 options-label" style="top: -12px">Header</label>
+                    <div class="row g-2 theme-options-items app-header" id="appHeaderList">
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-header-light" name="app-header" value="1" data-app-header="app-header-light" checked>
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-header-light">Light</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-header-dark" name="app-header" value="2" data-app-header="app-header-dark">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-header-dark">Dark</label>
+                        </div>
+                    </div>
+                </div>
+                <!--! END: [Header] !-->
+                <!--! BEGIN: [Skins] !-->
+                <div class="position-relative px-3 pb-3 pt-4 mt-3 mb-5 border border-gray-2 theme-options-set">
+                    <label class="py-1 px-2 fs-8 fw-bold text-uppercase text-muted text-spacing-2 bg-white border border-gray-2 position-absolute rounded-2 options-label" style="top: -12px">Skins</label>
+                    <div class="row g-2 theme-options-items app-skin" id="appSkinList">
+                        <div class="col-6 text-center position-relative single-option light-button active">
+                            <input type="radio" class="btn-check" id="app-skin-light" name="app-skin" value="1" data-app-skin="app-skin-light">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-skin-light">Light</label>
+                        </div>
+                        <div class="col-6 text-center position-relative single-option dark-button">
+                            <input type="radio" class="btn-check" id="app-skin-dark" name="app-skin" value="2" data-app-skin="app-skin-dark">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-skin-dark">Dark</label>
+                        </div>
+                    </div>
+                </div>
+                <!--! END: [Skins] !-->
+                <!--! BEGIN: [Typography] !-->
+                <div class="position-relative px-3 pb-3 pt-4 mt-3 mb-0 border border-gray-2 theme-options-set">
+                    <label class="py-1 px-2 fs-8 fw-bold text-uppercase text-muted text-spacing-2 bg-white border border-gray-2 position-absolute rounded-2 options-label" style="top: -12px">Typography</label>
+                    <div class="row g-2 theme-options-items font-family" id="fontFamilyList">
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-lato" name="font-family" value="1" data-font-family="app-font-family-lato">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-lato">Lato</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-rubik" name="font-family" value="2" data-font-family="app-font-family-rubik">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-rubik">Rubik</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-inter" name="font-family" value="3" data-font-family="app-font-family-inter" checked>
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-inter">Inter</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-cinzel" name="font-family" value="4" data-font-family="app-font-family-cinzel">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-cinzel">Cinzel</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-nunito" name="font-family" value="6" data-font-family="app-font-family-nunito">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-nunito">Nunito</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-roboto" name="font-family" value="7" data-font-family="app-font-family-roboto">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-roboto">Roboto</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-ubuntu" name="font-family" value="8" data-font-family="app-font-family-ubuntu">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-ubuntu">Ubuntu</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-poppins" name="font-family" value="9" data-font-family="app-font-family-poppins">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-poppins">Poppins</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-raleway" name="font-family" value="10" data-font-family="app-font-family-raleway">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-raleway">Raleway</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-system-ui" name="font-family" value="11" data-font-family="app-font-family-system-ui">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-system-ui">System UI</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-noto-sans" name="font-family" value="12" data-font-family="app-font-family-noto-sans">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-noto-sans">Noto Sans</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-fira-sans" name="font-family" value="13" data-font-family="app-font-family-fira-sans">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-fira-sans">Fira Sans</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-work-sans" name="font-family" value="14" data-font-family="app-font-family-work-sans">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-work-sans">Work Sans</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-open-sans" name="font-family" value="15" data-font-family="app-font-family-open-sans">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-open-sans">Open Sans</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-maven-pro" name="font-family" value="16" data-font-family="app-font-family-maven-pro">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-maven-pro">Maven Pro</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-quicksand" name="font-family" value="17" data-font-family="app-font-family-quicksand">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-quicksand">Quicksand</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-montserrat" name="font-family" value="18" data-font-family="app-font-family-montserrat">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-montserrat">Montserrat</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-josefin-sans" name="font-family" value="19" data-font-family="app-font-family-josefin-sans">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-josefin-sans">Josefin Sans</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-ibm-plex-sans" name="font-family" value="20" data-font-family="app-font-family-ibm-plex-sans">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-ibm-plex-sans">IBM Plex Sans</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-source-sans-pro" name="font-family" value="5" data-font-family="app-font-family-source-sans-pro">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-source-sans-pro">Source Sans Pro</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-montserrat-alt" name="font-family" value="21" data-font-family="app-font-family-montserrat-alt">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-montserrat-alt">Montserrat Alt</label>
+                        </div>
+                        <div class="col-6 text-center single-option">
+                            <input type="radio" class="btn-check" id="app-font-family-roboto-slab" name="font-family" value="22" data-font-family="app-font-family-roboto-slab">
+                            <label class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label" for="app-font-family-roboto-slab">Roboto Slab</label>
+                        </div>
+                    </div>
+                </div>
+                <!--! END: [Typography] !-->
+            </div>
+            {{-- <div class="customizer-sidebar-footer px-4 ht-60 border-top d-flex align-items-center gap-2">
+                <div class="flex-fill w-50">
+                    <a href="javascript:void(0);" class="btn btn-danger" data-style="reset-all-common-style">Reset</a>
+                </div>
+                <div class="flex-fill w-50">
+                    <a href="https://www.themewagon.com/themes/Duralux-admin" target="_blank" class="btn btn-primary">Download</a>
+                </div>
+            </div> --}}
+        </div>
     </div>
 
-    <!-- Metis Admin Scripts -->
-    <script type="module" src="{{ asset('vendor/metis-admin/dist-modern/assets/main-B24LRf0x.js') }}"></script>
-    @stack('scripts')
+    <!--! ================================================================ !-->
+    <!--! [End] Theme Customizer !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! Footer Script !-->
+    <!--! ================================================================ !-->
+    <!--! BEGIN: Vendors JS !-->
+    <script src="{{ asset('vendor/duralux-admin/assets/vendors/js/vendors.min.js') }}"></script>
+    <!-- vendors.min.js {always must need to be top} -->
+    <script src="{{ asset('vendor/duralux-admin/assets/vendors/js/daterangepicker.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/duralux-admin/assets/vendors/js/apexcharts.min.js') }}"></script> --}}
+    <script src="{{ asset('vendor/duralux-admin/assets/vendors/js/jquery.time-to.min.js') }}"></script>
+    <script src="{{ asset('vendor/duralux-admin/assets/vendors/js/circle-progress.min.js') }}"></script>
+    <!--! END: Vendors JS !-->
+    <!--! BEGIN: Apps Init  !-->
+    <script src="{{ asset('vendor/duralux-admin/assets/js/common-init.min.js') }}"></script>
+    {{-- yield page script --}}
+    @yield('page-script')
+
+    <!--! END: Apps Init !-->
+    <!--! BEGIN: Theme Customizer  !-->
+    <script src="{{ asset('vendor/duralux-admin/assets/js/theme-customizer-init.min.js') }}"></script>
+    <!--! END: Theme Customizer !-->
 </body>
+
 </html>

@@ -10,6 +10,7 @@
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.10.1",
+        "league/flysystem-google-cloud-storage": "^3.31",
         "spatie/laravel-permission": "^6.24",
         "stancl/tenancy": "^3.9"
     },
@@ -29,7 +30,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

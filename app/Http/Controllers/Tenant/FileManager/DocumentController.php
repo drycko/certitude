@@ -10,9 +10,9 @@ use App\Models\Tenant\Commodity;
 use App\Models\Tenant\Fbo;
 use App\Models\Tenant\Grower;
 use App\Models\Tenant\Variety;
-use App\Services\FileStorageService;
+use App\Services\Tenant\FileStorageService;
 use App\Services\Tenant\UserAccessService;
-use App\Services\NotificationService;
+use App\Services\Tenant\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -105,7 +105,7 @@ class DocumentController extends Controller
             }
         }
 
-        return view('documents.index', compact(
+        return view('tenant.documents.index', compact(
             'documents',
             'documentTypes',
             'subDocumentTypes',

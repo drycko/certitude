@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Public;
+namespace App\Http\Controllers\Tenant\Public;
 
 use App\Http\Controllers\Controller;
-use App\Services\NotificationService;
-use App\Models\User;
-use App\Models\AccessRequest;
+use App\Services\Tenant\NotificationService;
+use App\Models\Tenant\User;
+use App\Models\Tenant\AccessRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
