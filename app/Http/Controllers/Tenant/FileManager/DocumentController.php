@@ -170,7 +170,7 @@ class DocumentController extends Controller
                 'Accessed document upload form'
             );
 
-            return view('documents.create', compact('documentTypes', 'subDocumentTypes', 'commodities', 'fbos', 'companies', 'maxFileSize', 'allowedFileExtensions', 'growers', 'defaultGrowerId', 'varieties'));
+            return view('tenant.documents.create', compact('documentTypes', 'subDocumentTypes', 'commodities', 'fbos', 'companies', 'maxFileSize', 'allowedFileExtensions', 'growers', 'defaultGrowerId', 'varieties'));
 
         } catch (\Exception $e) {
             \Log::error('Error loading document upload form: ' . $e->getMessage());

@@ -14,7 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register GCS custom driver
+        $this->registerGCSDriver();
     }
 
     /**
@@ -22,6 +23,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // 
+    }
+    
+    // Register GCS custom driver
+    protected function registerGCSDriver()
+    {
+        Storage::extend('gcs', function ($app, $config) {
+            $adapter = new UniformGCSAdapter($config);
+            $filesystem = new Filesystem($adapter, $config);
+            return new \Illuminate\Filesystem\FilesystemAdapter($filesystem, $adapter, $config);
+        });
     }
 }

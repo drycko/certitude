@@ -22,7 +22,7 @@
             </a>
         </div>
         <div class="content-sidebar-header">
-            <a href="javascript:void(0);" class="btn btn-primary w-100">
+            <a href="{{ route('documents.create') }}" class="btn btn-primary w-100">
                 <i class="feather-upload me-2"></i>
                 <span>Upload Files</span>
             </a>

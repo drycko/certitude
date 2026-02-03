@@ -19,7 +19,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon/favicon.ico') }}">
     <!--! END: Favicon-->
     {{-- <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon/favicon.ico') }}"/> --}}
-
+    @php
+        $style_version = "1.0-".time();
+    @endphp
     {{-- bootstrap icons --}}
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicon/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicon/favicon-32x32.png') }}">
@@ -625,7 +627,7 @@
     <!--! ================================================================ !-->
     <!--! [Start] Main Content !-->
     <!--! ================================================================ !-->
-    @if(request()->routeIs('documents.*'))
+    @if(request()->routeIs('documents.index'))
     <main class="nxl-container apps-container apps-storage">
         <div class="nxl-content without-header nxl-full-content">
             <!-- [ Main Content ] start -->
@@ -644,6 +646,7 @@
                         @yield('breadcrumb')
                     </ul>
                 </div>
+                @if(request()->routeIs('documents.index'))
                 <div class="page-header-right ms-auto">
                     <div class="page-header-right-items">
                         <div class="d-flex d-md-none">
@@ -711,6 +714,7 @@
                         </a>
                     </div>
                 </div>
+                @endif
             </div>
             <!-- [ page-header ] end -->
             @endif
