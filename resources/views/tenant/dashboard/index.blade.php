@@ -28,7 +28,7 @@
                         <button type="button" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                             <i class="feather-bar-chart"></i>
                         </button>
-                        <a href="{{ route('documents.index') }}" class="btn btn-primary">
+                        <a href="{{ route('files.index') }}" class="btn btn-primary">
                             <i class="feather-folder me-2"></i>
                             <span>View Files</span>
                         </a>
@@ -68,33 +68,33 @@
             </div>
 
             <div class="row">
-                <!-- Recent Documents -->
+                <!-- Recent Files -->
                 <div class="col-xxl-8 col-xl-7">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
                             <h5 class="card-title">Recent Files</h5>
                             <div class="card-header-action">
-                                <a href="{{ route('documents.index') }}" class="btn btn-sm btn-light-brand">View All</a>
+                                <a href="{{ route('files.index') }}" class="btn btn-sm btn-light-brand">View All</a>
                             </div>
                         </div>
                         <div class="card-body custom-card-action">
-                            @forelse($recentDocuments as $document)
+                            @forelse($recentFiles as $file)
                                 <div class="d-flex align-items-center justify-content-between mb-4 {{ !$loop->last ? 'border-bottom pb-3' : '' }}">
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="avatar-text avatar-md">
                                             <i class="feather-file-text"></i>
                                         </div>
                                         <div>
-                                            <a href="{{ route('documents.show', $document) }}" class="fw-bold d-block mb-1">{{ $document->title }}</a>
+                                            <a href="{{ route('files.show', $file) }}" class="fw-bold d-block mb-1">{{ $file->title }}</a>
                                             <div class="fs-11 text-muted">
-                                                <span>{{ $document->documentType->name ?? 'N/A' }}</span>
+                                                <span>{{ $file->fileType->name ?? 'N/A' }}</span>
                                                 <span class="mx-2">•</span>
-                                                <span>{{ $document->created_at->format('M d, Y') }}</span>
+                                                <span>{{ $file->created_at->format('M d, Y') }}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
-                                        <a href="{{ route('documents.show', $document) }}" class="avatar-text avatar-md">
+                                        <a href="{{ route('files.show', $file) }}" class="avatar-text avatar-md">
                                             <i class="feather-eye"></i>
                                         </a>
                                     </div>
@@ -103,7 +103,7 @@
                                 <div class="text-center py-5">
                                     <i class="feather-folder fs-1 text-muted mb-3"></i>
                                     <p class="text-muted">No recent files found</p>
-                                    <a href="{{ route('documents.create') }}" class="btn btn-sm btn-primary mt-2">Upload File</a>
+                                    <a href="{{ route('files.create') }}" class="btn btn-sm btn-primary mt-2">Upload File</a>
                                 </div>
                             @endforelse
                         </div>
@@ -166,15 +166,15 @@
                 </div>
             </div>
 
-            <!-- Expiring Documents (Admin Only) -->
-            @if(isset($expiringDocuments) && $expiringDocuments->count() > 0)
+            <!-- Expiring Files (Admin Only) -->
+            @if(isset($expiringFiles) && $expiringFiles->count() > 0)
                 <div class="row">
                     <div class="col-12">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
                                 <h5 class="card-title">Expiring Files (Next 30 Days)</h5>
                                 <div class="card-header-action">
-                                    <a href="{{ route('documents.index') }}?filter=expiring" class="btn btn-sm btn-light-brand">View All</a>
+                                    <a href="{{ route('files.index') }}?filter=expiring" class="btn btn-sm btn-light-brand">View All</a>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -190,21 +190,21 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($expiringDocuments as $document)
+                                            @foreach($expiringFiles as $file)
                                                 <tr>
-                                                    <td>{{ $document->title }}</td>
-                                                    <td>{{ $document->documentType->name ?? 'N/A' }}</td>
-                                                    <td>{{ $document->expiry_date->format('M d, Y') }}</td>
+                                                    <td>{{ $file->title }}</td>
+                                                    <td>{{ $file->fileType->name ?? 'N/A' }}</td>
+                                                    <td>{{ $file->expiry_date->format('M d, Y') }}</td>
                                                     <td>
                                                         @php
-                                                            $daysLeft = now()->diffInDays($document->expiry_date, false);
+                                                            $daysLeft = now()->diffInDays($file->expiry_date, false);
                                                         @endphp
                                                         <span class="badge {{ $daysLeft <= 7 ? 'bg-soft-danger text-danger' : 'bg-soft-warning text-warning' }}">
                                                             {{ $daysLeft }} days
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('documents.show', $document) }}" class="btn btn-sm btn-light-brand">View</a>
+                                                        <a href="{{ route('files.show', $file) }}" class="btn btn-sm btn-light-brand">View</a>
                                                     </td>
                                                 </tr>
                                             @endforeach

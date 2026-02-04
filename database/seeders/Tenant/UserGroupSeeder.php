@@ -23,7 +23,7 @@ class UserGroupSeeder extends Seeder
                 Maintain master data',
                 'metadata' => [
                     'document_access' => [
-                        'document_types' => ['all'],
+                        'file_types' => ['all'],
                         'visibility' => [true, false] // all
                     ],
                     'powerbi_link_access' => true,
@@ -51,7 +51,7 @@ class UserGroupSeeder extends Seeder
                 'metadata' => [
                     'document_access' => [
                         'commodities' => ['all'],
-                        'document_types' => ['Quality Reports', 'Certificates', 'Residue COA'],
+                        'file_types' => ['Quality Reports', 'Certificates', 'Residue COA'],
                         'visibility' => [true, false]
                     ],
                     'powerbi_link_access' => true,
@@ -74,7 +74,7 @@ class UserGroupSeeder extends Seeder
                 'metadata' => [
                     'document_access' => [
                         'commodities' => ['all'],
-                        'document_types' => ['Certificates', 'Residue COA'],
+                        'file_types' => ['Certificates', 'Residue COA'],
                         'visibility' => [true, false] // Both public and private
                     ],
                     'powerbi_link_access' => true,
@@ -101,7 +101,7 @@ class UserGroupSeeder extends Seeder
                 'metadata' => [
                     'document_access' => [
                         'commodities' => ['all'],
-                        'document_types' => ['none'],
+                        'file_types' => ['none'],
                         'visibility' => [true, false]
                     ],
                     'powerbi_link_access' => true,
@@ -123,7 +123,7 @@ class UserGroupSeeder extends Seeder
                 'description' => 'External auditors with read-only access',
                 'metadata' => [
                     'document_access' => [
-                        'document_types' => ['Certificates', 'Quality Reports', 'Environmental COA', 'Residue COA'],
+                        'file_types' => ['Certificates', 'Quality Reports', 'Environmental COA', 'Residue COA'],
                         'visibility' => [true]
                     ],
                     'powerbi_link_access' => true,

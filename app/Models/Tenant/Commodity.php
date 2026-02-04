@@ -39,9 +39,9 @@ class Commodity extends Model
         return $this->belongsToMany(User::class, 'user_commodity');
     }
 
-    public function documents(): BelongsToMany
+    public function files(): BelongsToMany
     {
-        return $this->belongsToMany(Document::class, 'document_commodity');
+        return $this->belongsToMany(File::class, 'file_commodity');
     }
 
     public function growers(): BelongsToMany
@@ -50,8 +50,8 @@ class Commodity extends Model
         return $this->belongsToMany(Grower::class, 'grower_commodities', 'commodity_id', 'grower_id')->withTimestamps();
     }
 
-    public function countDocuments()
+    public function countFiles()
     {
-        return $this->documents()->count();
+        return $this->files()->count();
     }
 }

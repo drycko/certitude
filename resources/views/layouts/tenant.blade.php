@@ -112,9 +112,9 @@
                             <span class="nxl-mtext">Files</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item {{ request()->routeIs('documents.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('documents.index') }}">All Files</a></li>
-                            <li class="nxl-item {{ request()->routeIs('documents.create') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('documents.create') }}">Upload</a></li>
-                            <li class="nxl-item {{ request()->routeIs('trashed-data.documents.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('trashed-data.documents.index') }}">Trash</a></li>
+                            <li class="nxl-item {{ request()->routeIs('files.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('files.index') }}">All Files</a></li>
+                            <li class="nxl-item {{ request()->routeIs('files.create') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('files.create') }}">Upload</a></li>
+                            <li class="nxl-item {{ request()->routeIs('trashed-data.files.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('trashed-data.files.index') }}">Trash</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -169,7 +169,7 @@
                         <ul class="nxl-submenu">
                             <li class="nxl-item {{ request()->routeIs('master-data.companies.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.companies.index') }}">Companies</a></li>
                             <li class="nxl-item {{ request()->routeIs('master-data.varieties.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.varieties.index') }}">Crop Varieties</a></li>
-                            <li class="nxl-item {{ request()->routeIs('master-data.document-types.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.document-types.index') }}">Folders</a></li>
+                            <li class="nxl-item {{ request()->routeIs('master-data.file-types.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.file-types.index') }}">Folders</a></li>
                             <li class="nxl-item {{ request()->routeIs('master-data.fbos.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.fbos.index') }}">FBOs</a></li>
                             <li class="nxl-item {{ request()->routeIs('master-data.growers.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.growers.index') }}">Growers</a></li>
                             <li class="nxl-item {{ request()->routeIs('master-data.commodities.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.commodities.index') }}">Commodities</a></li>
@@ -627,7 +627,7 @@
     <!--! ================================================================ !-->
     <!--! [Start] Main Content !-->
     <!--! ================================================================ !-->
-    @if(request()->routeIs('documents.index'))
+    @if(request()->routeIs('files.index'))
     <main class="nxl-container apps-container apps-storage">
         <div class="nxl-content without-header nxl-full-content">
             <!-- [ Main Content ] start -->
@@ -646,7 +646,7 @@
                         @yield('breadcrumb')
                     </ul>
                 </div>
-                @if(request()->routeIs('documents.index'))
+                @if(request()->routeIs('files.index'))
                 <div class="page-header-right ms-auto">
                     <div class="page-header-right-items">
                         <div class="d-flex d-md-none">
@@ -721,27 +721,6 @@
             <!-- [ Main Content ] start -->
             <div class="main-content">
     @endif
-                <!-- Flash Messages -->
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if(session('warning'))
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-circle me-2"></i>{{ session('warning') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
 
                 <!-- Page Content -->
                 @yield('content')
@@ -1295,7 +1274,7 @@
     <!--! BEGIN: Apps Init  !-->
     <script src="{{ asset('vendor/duralux-admin/assets/js/common-init.min.js') }}"></script>
     {{-- yield page script --}}
-    @yield('page-script')
+    @stack('page-script')
 
     <!--! END: Apps Init !-->
     <!--! BEGIN: Theme Customizer  !-->

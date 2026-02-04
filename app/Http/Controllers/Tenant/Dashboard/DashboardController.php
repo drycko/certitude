@@ -29,14 +29,14 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Get recent documents accessible by user
-        $recentDocuments = $this->userAccessService
-            ->getAccessibleDocuments($user)
+        // Get recent files accessible by user
+        $recentFiles = $this->userAccessService
+            ->getAccessibleFiles($user)
             ->latest()
             ->take(5)
             ->get();
 
-        // if customer role, redirect to documents page
+        // if customer role, redirect to files page
         if ($user->isCustomerRole()) {
             return redirect()->route('tenant.customer.index');
         }
@@ -44,11 +44,11 @@ class DashboardController extends Controller
         // Get powerbi links for user
         $powerbiLinks = $this->powerbiService->getLinksForUser($user);
 
-        // Get expiring documents (for admin/super users)
-        $expiringDocuments = [];
+        // Get expiring files (for admin/super users)
+        $expiringFiles = [];
         if ($user->isAdminRole() || $user->isSuperUserRole()) {
-            $expiringDocuments = $this->userAccessService
-                ->getAccessibleDocuments($user)
+            $expiringFiles = $this->userAccessService
+                ->getAccessibleFiles($user)
                 ->whereNotNull('expiry_date')
                 ->where('expiry_date', '<=', now()->addDays(30))
                 ->where('expiry_date', '>=', now())
@@ -63,9 +63,9 @@ class DashboardController extends Controller
         $stats = $this->getDashboardStats($user);
 
         return view('tenant.dashboard.index', compact(
-            'recentDocuments',
+            'recentFiles',
             'powerbiLinks',
-            'expiringDocuments',
+            'expiringFiles',
             'stats', 'commodities'
         ));
     }
@@ -80,10 +80,10 @@ class DashboardController extends Controller
         if ($user->isAdminRole() || $user->isSuperUserRole()) {
             // Admin stats
             $stats = [
-                'total_documents' => \App\Models\Tenant\Document::where('is_active', true)->count(),
+                'total_files' => \App\Models\Tenant\File::where('is_active', true)->count(),
                 'total_users' => \App\Models\Tenant\User::where('is_active', true)->count(),
                 'total_companies' => \App\Models\Tenant\Company::where('is_active', true)->count(),
-                'expired_documents' => \App\Models\Tenant\Document::whereNotNull('expiry_date')
+                'expired_files' => \App\Models\Tenant\File::whereNotNull('expiry_date')
                     ->where('expiry_date', '<', now())
                     ->where('is_active', true)
                     ->count(),
@@ -91,27 +91,27 @@ class DashboardController extends Controller
         } elseif ($user->isGrowerRole()) {
             // Grower stats
             $stats = [
-                'my_documents' => $user->documents()->where('is_active', true)->count(),
-                'accessible_documents' => $this->userAccessService
-                    ->getAccessibleDocuments($user)
+                'my_files' => $user->files()->where('is_active', true)->count(),
+                'accessible_files' => $this->userAccessService
+                    ->getAccessibleFiles($user)
                     ->count(),
                 'powerbi_dashboards' => $this->powerbiService->getLinksForUser($user)->count(),
                 'commodities' => $user->commodities->count(),
-                // count of accessible documents per commodity
-                'commodity_documents' => $user->commodities->mapWithKeys(function ($commodity) use ($user) {
+                // count of accessible files per commodity
+                'commodity_files' => $user->commodities->mapWithKeys(function ($commodity) use ($user) {
                     return [$commodity->id => $this->userAccessService
-                        ->getAccessibleDocumentsByCommodity($commodity, $user)
+                        ->getAccessibleFilesByCommodity($commodity, $user)
                         ->count()];
                 })->toArray(),
-                // 'commodity_documents' => $user->commodities->mapWithKeys(function ($commodity) {
-                //     return [$commodity->id => $commodity->countDocuments()];
+                // 'commodity_files' => $user->commodities->mapWithKeys(function ($commodity) {
+                //     return [$commodity->id => $commodity->countFiles()];
                 // })->toArray(),
             ];
         } elseif ($user->isCustomerRole()) {
             // Customer stats
             $stats = [
-                'accessible_documents' => $this->userAccessService
-                    ->getAccessibleDocuments($user)
+                'accessible_files' => $this->userAccessService
+                    ->getAccessibleFiles($user)
                     ->count(),
                 'powerbi_dashboards' => $this->powerbiService->getLinksForUser($user)->count(),
                 'commodities' => $user->commodities->count(),
@@ -119,8 +119,8 @@ class DashboardController extends Controller
         } elseif ($user->isDoleRole()) {
             // Dole stats
             $stats = [
-                'total_documents' => \App\Models\Tenant\Document::where('is_active', true)->count(),
-                'quality_reports' => \App\Models\Tenant\Document::whereHas('documentType', function ($q) {
+                'total_files' => \App\Models\Tenant\File::where('is_active', true)->count(),
+                'quality_reports' => \App\Models\Tenant\File::whereHas('fileType', function ($q) {
                     $q->where('name', 'Quality Reports');
                 })->where('is_active', true)->count(),
                 'powerbi_dashboards' => $this->powerbiService->getLinksForUser($user)->count(),

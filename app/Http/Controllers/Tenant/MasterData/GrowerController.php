@@ -164,7 +164,7 @@ class GrowerController extends Controller
                 $grower->commodities()->sync($validated['commodity_ids']);
             }
 
-            // $documents[] = $document;
+            // $files[] = $file;
             DB::commit();
             
             // log activity and create notification

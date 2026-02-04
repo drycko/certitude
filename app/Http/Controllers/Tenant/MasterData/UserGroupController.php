@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\UserGroup;
 use App\Models\Tenant\User;
 use App\Models\Tenant\PowerbiLinkType;
-use App\Models\Tenant\DocumentType;
+use App\Models\Tenant\FileType;
 use App\Services\NotificationService;
 use App\Services\Tenant\UserAccessService;
 use Illuminate\Http\Request;
@@ -44,7 +44,7 @@ class UserGroupController extends Controller
     public function index(Request $request)
     {
         // Fetch all user groups, with filtering and pagination as needed
-        $query = UserGroup::with('permissions', 'users', 'documentTypes')->withCount('users')->withCount('documentTypes');
+        $query = UserGroup::with('permissions', 'users', 'fileTypes')->withCount('users')->withCount('fileTypes');
 
         // search filter by name or display_name or description
         if ($search = request('search')) {
@@ -97,9 +97,9 @@ class UserGroupController extends Controller
     public function create()
     {
         // Show form to create a new user group
-        $documentTypes = DocumentType::where('is_active', true)->orderBy('name')->get();
+        $fileTypes = FileType::where('is_active', true)->orderBy('name')->get();
         $powerbiLinkTypes = PowerbiLinkType::where('is_active', true)->orderBy('name')->get();
-        return view('groups.create', compact('documentTypes', 'powerbiLinkTypes'));
+        return view('groups.create', compact('fileTypes', 'powerbiLinkTypes'));
     }
 
     /**
@@ -114,8 +114,8 @@ class UserGroupController extends Controller
                 'display_name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'is_active' => 'required|boolean',
-                'document_types' => 'nullable|array',
-                'document_types.*' => 'exists:document_types,id',
+                'file_types' => 'nullable|array',
+                'file_types.*' => 'exists:file_types,id',
                 'powerbi_link_types' => 'nullable|array',
                 'powerbi_link_types.*' => 'exists:powerbi_link_types,id',
             ]);
@@ -131,9 +131,9 @@ class UserGroupController extends Controller
                 'is_active' => $validated['is_active'],
                 'created_by' => auth()->id(),
             ]);
-            // Attach document types if provided
-            if (!empty($validated['document_types'])) {
-                $group->documentTypes()->sync($validated['document_types']);
+            // Attach file types if provided
+            if (!empty($validated['file_types'])) {
+                $group->fileTypes()->sync($validated['file_types']);
             }
             // Attach powerbi link types if provided
             if (!empty($validated['powerbi_link_types'])) {
@@ -163,13 +163,13 @@ class UserGroupController extends Controller
     public function show(UserGroup $group)
     {
         // Show details of a specific user group
-        $group->load('permissions', 'users', 'documentTypes', 'powerbiLinkTypes');
+        $group->load('permissions', 'users', 'fileTypes', 'powerbiLinkTypes');
         $activityLogs = $this->getActivityLogs('user_groups', $group->id);
         $allUsers = User::where('is_active', true)->orderBy('name')->get();
-        $allDocumentTypes = DocumentType::where('is_active', true)->orderBy('name')->get();
+        $allFileTypes = FileType::where('is_active', true)->orderBy('name')->get();
         $allPowerbiLinkTypes = PowerbiLinkType::where('is_active', true)->orderBy('name')->get();
 
-        return view('groups.show', compact('group', 'activityLogs', 'allUsers', 'allDocumentTypes', 'allPowerbiLinkTypes'));
+        return view('groups.show', compact('group', 'activityLogs', 'allUsers', 'allFileTypes', 'allPowerbiLinkTypes'));
     }
 
     /**
@@ -178,9 +178,9 @@ class UserGroupController extends Controller
     public function edit(UserGroup $group)
     {
         // Show form to edit a user group
-        $documentTypes = DocumentType::where('is_active', true)->orderBy('name')->get();
+        $fileTypes = FileType::where('is_active', true)->orderBy('name')->get();
         $powerbiLinkTypes = PowerbiLinkType::where('is_active', true)->orderBy('name')->get();
-        return view('groups.edit', compact('group', 'documentTypes', 'powerbiLinkTypes'));
+        return view('groups.edit', compact('group', 'fileTypes', 'powerbiLinkTypes'));
     }
 
     /**
@@ -195,8 +195,8 @@ class UserGroupController extends Controller
                 'display_name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'is_active' => 'required|boolean',
-                // 'document_types' => 'nullable|array',
-                // 'document_types.*' => 'exists:document_types,id',
+                // 'file_types' => 'nullable|array',
+                // 'file_types.*' => 'exists:file_types,id',
                 // 'powerbi_link_types' => 'nullable|array',
                 // 'powerbi_link_types.*' => 'exists:powerbi_link_types,id',
             ]);
@@ -213,11 +213,11 @@ class UserGroupController extends Controller
                 'is_active' => $validated['is_active'],
                 'updated_by' => auth()->id(),
             ]);
-            // // Sync document types
-            // if (isset($validated['document_types'])) {
-            //     $group->documentTypes()->sync($validated['document_types']);
+            // // Sync file types
+            // if (isset($validated['file_types'])) {
+            //     $group->fileTypes()->sync($validated['file_types']);
             // } else {
-            //     $group->documentTypes()->detach();
+            //     $group->fileTypes()->detach();
             // }
             // // Sync powerbi link types
             // if (isset($validated['powerbi_link_types'])) {
@@ -389,32 +389,32 @@ class UserGroupController extends Controller
     }
 
     /**
-     * Assign document types to the group
+     * Assign file types to the group
      */
-    public function assignDocumentTypes(Request $request, UserGroup $group)
+    public function assignFileTypes(Request $request, UserGroup $group)
     {
         try {
             $validated = $request->validate([
-                'document_types' => 'nullable|array',
-                'document_types.*' => 'exists:document_types,id',
+                'file_types' => 'nullable|array',
+                'file_types.*' => 'exists:file_types,id',
             ]);
             // start transaction
             \DB::beginTransaction();
-            $group->documentTypes()->sync($validated['document_types'] ?? []);
+            $group->fileTypes()->sync($validated['file_types'] ?? []);
             // log activity and create notification
             $this->logUserActivityAndNotification(
                 'update',
                 'user_groups',
                 $group->id,
-                'Updated document types for group: ' . $group->name,
-                'User group "' . $group->name . '" document types updated successfully.'
+                'Updated file types for group: ' . $group->name,
+                'User group "' . $group->name . '" file types updated successfully.'
             );
             \DB::commit();
-            return redirect()->route('master-data.groups.show', $group->id)->with('success', 'Group document types updated successfully.');
+            return redirect()->route('master-data.groups.show', $group->id)->with('success', 'Group file types updated successfully.');
         } catch (\Exception $e) {
             \DB::rollBack();
-            \Log::error("Error in UserGroupController@assignDocumentTypes: " . $e->getMessage());
-            return back()->withErrors(['error' => 'Failed to update group document types. Error: ' . $e->getMessage()])->withInput();
+            \Log::error("Error in UserGroupController@assignFileTypes: " . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to update group file types. Error: ' . $e->getMessage()])->withInput();
         }
     }
 

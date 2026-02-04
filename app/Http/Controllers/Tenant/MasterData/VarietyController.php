@@ -425,7 +425,7 @@ class VarietyController extends Controller
             $file = fopen('php://output', 'w');
             
             // Add CSV headers
-            fputcsv($file, ['Code', 'Name', 'Description', 'Documents Count', 'Created At', 'Updated At']);
+            fputcsv($file, ['Code', 'Name', 'Description', 'Files Count', 'Created At', 'Updated At']);
             
             // Add data rows
             foreach ($varieties as $variety) {
@@ -433,7 +433,7 @@ class VarietyController extends Controller
                     $variety->code,
                     $variety->name,
                     $variety->description,
-                    $variety->documents()->count(),
+                    $variety->files()->count(),
                     $variety->created_at->format('Y-m-d H:i:s'),
                     $variety->updated_at->format('Y-m-d H:i:s'),
                 ]);

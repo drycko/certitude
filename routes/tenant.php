@@ -6,9 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use App\Http\Controllers\Tenant\Dashboard\DashboardController;
-use App\Http\Controllers\Tenant\FileManager\DocumentController;
-// use App\Http\Controllers\PowerBi\PowerBiController;
-use App\Http\Controllers\Tenant\SummaryManager\SummaryLinkController;
+use App\Http\Controllers\Tenant\FileManager\FileController;
+use App\Http\Controllers\PowerbiManager\PowerbiController;
 use App\Http\Controllers\Tenant\UserManagement\UserController;
 use App\Http\Controllers\Tenant\UserManagement\RoleController;
 use App\Http\Controllers\Tenant\UserManagement\RoleAssignmentController;
@@ -23,8 +22,8 @@ use App\Http\Controllers\Tenant\MasterData\VesselController;
 use App\Http\Controllers\Tenant\MasterData\FboController;
 use App\Http\Controllers\Tenant\MasterData\UserGroupController;
 use App\Http\Controllers\Tenant\MasterData\CompanyController;
-use App\Http\Controllers\Tenant\MasterData\DocumentTypeController;
-use App\Http\Controllers\Tenant\MasterData\SummaryLinkTypeController;
+use App\Http\Controllers\Tenant\MasterData\FileTypeController;
+use App\Http\Controllers\Tenant\MasterData\PowerbiLinkTypeController;
 use App\Http\Controllers\Tenant\HelpController;
 use Illuminate\Support\Facades\Auth;
 
@@ -110,30 +109,30 @@ Route::middleware([
         // mark all as read
         Route::post('/notifications/mark-all-as-read', [DashboardController::class, 'notificationsMarkAllAsRead'])->name('notifications.mark-all-as-read');
 
-        // Document routes
-        Route::resource('documents', DocumentController::class)->names([
-            'index' => 'documents.index',
-            'create' => 'documents.create',
-            'store' => 'documents.store',
-            'show' => 'documents.show',
-            'edit' => 'documents.edit',
-            'update' => 'documents.update',
-            // 'destroy' => 'documents.destroy',
+        // File routes
+        Route::resource('files', FileController::class)->names([
+            'index' => 'files.index',
+            'create' => 'files.create',
+            'store' => 'files.store',
+            'show' => 'files.show',
+            'edit' => 'files.edit',
+            'update' => 'files.update',
+            // 'destroy' => 'files.destroy',
         ]);
-        Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
-        Route::get('/documents/management/bulk', [DocumentController::class, 'bulk'])->name('documents.bulk');
-        Route::post('/documents/batch-download', [DocumentController::class, 'batchDownload'])->name('documents.batch-download');
-        Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
-        Route::get('/documents/{document}/preview', [DocumentController::class, 'preview'])->name('documents.preview');
+        Route::delete('/files/{file}', [FileController::class, 'destroy'])->name('files.destroy');
+        Route::get('/files/management/bulk', [FileController::class, 'bulk'])->name('files.bulk');
+        Route::post('/files/batch-download', [FileController::class, 'batchDownload'])->name('files.batch-download');
+        Route::get('/files/{file}/download', [FileController::class, 'download'])->name('files.download');
+        Route::get('/files/{file}/preview', [FileController::class, 'preview'])->name('files.preview');
         
         // Bulk operations (admin only)
         Route::middleware(['role:admin|super-user'])->group(function () {
-            Route::post('/documents/bulk-activate', [DocumentController::class, 'bulkActivate'])->name('documents.bulk-activate');
-            Route::post('/documents/bulk-deactivate', [DocumentController::class, 'bulkDeactivate'])->name('documents.bulk-deactivate');
-            Route::post('/documents/bulk-make-public', [DocumentController::class, 'bulkMakePublic'])->name('documents.bulk-make-public');
-            Route::post('/documents/bulk-make-private', [DocumentController::class, 'bulkMakePrivate'])->name('documents.bulk-make-private');
-            Route::post('/documents/bulk-set-expiry', [DocumentController::class, 'bulkSetExpiry'])->name('documents.bulk-set-expiry');
-            Route::post('/documents/bulk-delete', [DocumentController::class, 'bulkDelete'])->name('documents.bulk-delete');
+            Route::post('/files/bulk-activate', [FileController::class, 'bulkActivate'])->name('files.bulk-activate');
+            Route::post('/files/bulk-deactivate', [FileController::class, 'bulkDeactivate'])->name('files.bulk-deactivate');
+            Route::post('/files/bulk-make-public', [FileController::class, 'bulkMakePublic'])->name('files.bulk-make-public');
+            Route::post('/files/bulk-make-private', [FileController::class, 'bulkMakePrivate'])->name('files.bulk-make-private');
+            Route::post('/files/bulk-set-expiry', [FileController::class, 'bulkSetExpiry'])->name('files.bulk-set-expiry');
+            Route::post('/files/bulk-delete', [FileController::class, 'bulkDelete'])->name('files.bulk-delete');
         });
 
         // Power BI Links routes
@@ -296,8 +295,8 @@ Route::middleware([
                 
                 // assign users to group
                 Route::post('group-assign-users/{group}', [UserGroupController::class, 'assignUsers'])->name('group-assign-users.update');
-                // Assign document types to groups
-                Route::post('group-assign-document-types/{group}', [UserGroupController::class, 'assignDocumentTypes'])->name('group-assign-document-types.update');
+                // Assign file types to groups
+                Route::post('group-assign-file-types/{group}', [UserGroupController::class, 'assignFileTypes'])->name('group-assign-file-types.update');
                 // assign powerbi link types to groups
                 Route::post('group-assign-powerbi-link-types/{group}', [UserGroupController::class, 'assignPowerbiLinkTypes'])->name('group-assign-powerbi-link-types.update');
 
@@ -312,15 +311,15 @@ Route::middleware([
                     'destroy' => 'companies.destroy',
                 ]);
 
-                // Document Types management - dedicated controller with proper permissions
-                Route::resource('document-types', DocumentTypeController::class)->names([
-                    'index' => 'document-types.index',
-                    'create' => 'document-types.create',
-                    'store' => 'document-types.store',
-                    'show' => 'document-types.show',
-                    'edit' => 'document-types.edit',
-                    'update' => 'document-types.update',
-                    'destroy' => 'document-types.destroy',
+                // File Types management - dedicated controller with proper permissions
+                Route::resource('file-types', FileTypeController::class)->names([
+                    'index' => 'file-types.index',
+                    'create' => 'file-types.create',
+                    'store' => 'file-types.store',
+                    'show' => 'file-types.show',
+                    'edit' => 'file-types.edit',
+                    'update' => 'file-types.update',
+                    'destroy' => 'file-types.destroy',
                 ]);
 
                 // powerbi link Types management - dedicated controller with proper permissions
@@ -355,14 +354,14 @@ Route::middleware([
             Route::get('/company-logos/{filename}', [CompanyController::class, 'downloadLogo'])->name('company.logo.download');
 
             Route::prefix('trashed-data')->name('trashed-data.')->group(function () {
-                // Trashed documents management
-                Route::get('documents', [DocumentController::class, 'trashed'])->name('documents.index');
-                Route::post('documents/{id}/restore', [DocumentController::class, 'restore'])->name('documents.restore');
-                Route::post('documents/{id}/force-delete', [DocumentController::class, 'forceDelete'])->name('documents.force-delete');
-                Route::post('documents/bulk-restore', [DocumentController::class, 'bulkRestore'])->name('documents.bulk-restore');
-                Route::post('documents/bulk-force-delete', [DocumentController::class, 'bulkForceDelete'])->name('documents.bulk-force-delete');
-                Route::post('documents/bulk-restore-all', [DocumentController::class, 'bulkRestoreAll'])->name('documents.bulk-restore-all');
-                Route::post('documents/bulk-force-delete-all', [DocumentController::class, 'bulkForceDeleteAll'])->name('documents.bulk-force-delete-all');
+                // Trashed files management
+                Route::get('files', [FileController::class, 'trashed'])->name('files.index');
+                Route::post('files/{id}/restore', [FileController::class, 'restore'])->name('files.restore');
+                Route::post('files/{id}/force-delete', [FileController::class, 'forceDelete'])->name('files.force-delete');
+                Route::post('files/bulk-restore', [FileController::class, 'bulkRestore'])->name('files.bulk-restore');
+                Route::post('files/bulk-force-delete', [FileController::class, 'bulkForceDelete'])->name('files.bulk-force-delete');
+                Route::post('files/bulk-restore-all', [FileController::class, 'bulkRestoreAll'])->name('files.bulk-restore-all');
+                Route::post('files/bulk-force-delete-all', [FileController::class, 'bulkForceDeleteAll'])->name('files.bulk-force-delete-all');
 
                 // Trashed user management
                 Route::get('users', [UserController::class, 'trashed'])->name('users.index');
@@ -427,12 +426,12 @@ Route::middleware([
                 Route::post('companies/bulk-restore', [CompanyController::class, 'bulkRestore'])->name('companies.bulk-restore');
                 Route::post('companies/bulk-force-delete', [CompanyController::class, 'bulkForceDelete'])->name('companies.bulk-force-delete');
 
-                // Trashed document type management
-                Route::get('document-types', [DocumentTypeController::class, 'trashed'])->name('document-types.index');
-                Route::post('document-types/{id}/restore', [DocumentTypeController::class, 'restore'])->name('document-types.restore');
-                Route::post('document-types/{id}/force-delete', [DocumentTypeController::class, 'forceDelete'])->name('document-types.force-delete');
-                Route::post('document-types/bulk-restore', [DocumentTypeController::class, 'bulkRestore'])->name('document-types.bulk-restore');
-                Route::post('document-types/bulk-force-delete', [DocumentTypeController::class, 'bulkForceDelete'])->name('document-types.bulk-force-delete');
+                // Trashed file type management
+                Route::get('file-types', [FileTypeController::class, 'trashed'])->name('file-types.index');
+                Route::post('file-types/{id}/restore', [FileTypeController::class, 'restore'])->name('file-types.restore');
+                Route::post('file-types/{id}/force-delete', [FileTypeController::class, 'forceDelete'])->name('file-types.force-delete');
+                Route::post('file-types/bulk-restore', [FileTypeController::class, 'bulkRestore'])->name('file-types.bulk-restore');
+                Route::post('file-types/bulk-force-delete', [FileTypeController::class, 'bulkForceDelete'])->name('file-types.bulk-force-delete');
 
                 // Trashed Powerbi link type management
                 Route::get('powerbi-link-types', [PowerbiLinkTypeController::class, 'trashed'])->name('powerbi-link-types.index');

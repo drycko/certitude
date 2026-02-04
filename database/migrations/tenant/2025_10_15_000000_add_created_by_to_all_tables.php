@@ -9,7 +9,7 @@ return new class extends Migration {
   {
     // tables without created_by column (main tables only - exclude pivot, roles, permissions and settings tables)
     $tables = [
-      'document_types',
+      'file_types',
       'powerbi_links',
       'commodities',
       'fbos',
@@ -29,7 +29,7 @@ return new class extends Migration {
   public function down()
   {
     $tables = [
-      'document_types',
+      'file_types',
       'powerbi_links',
       'commodities',
       'fbos',

@@ -22,10 +22,13 @@ class FileStorageService
     {
         $originalName = $file->getClientOriginalName();
         $filename = $this->generateUniqueFilename($file);
-        $path = $directory . '/' . $filename;
+        $currentTenant = current_tenant();
+        // encode tenant ID in path to segregate files
+        $tenantId = $currentTenant->id;
+        $path = 'tenants/tenant_' . $tenantId . '/' . $directory . '/' . $filename;
 
         // Store the file
-        $storedPath = Storage::disk($this->disk)->putFileAs($directory, $file, $filename);
+        $storedPath = Storage::disk($this->disk)->putFileAs($path, $file, $filename);
 
         return [
             'filename' => $filename,

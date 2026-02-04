@@ -337,7 +337,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load(['company', 'roles', 'commodities', 'userGroups', 'documents']);
+        $user->load(['company', 'roles', 'commodities', 'userGroups', 'files']);
         $companies = Company::where('is_active', true)->orderBy('name')->get();
         $roles = Role::orderBy('name')->get();
         $commodities = Commodity::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get();
@@ -354,7 +354,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load(['company', 'commodities', 'documents', 'userGroups', 'growers', 'fbos']);
+        $user->load(['company', 'commodities', 'files', 'userGroups', 'growers', 'fbos']);
         $companies = Company::where('is_active', true)->orderBy('name')->get();
         $roles = Role::orderBy('name')->get();
         $commodities = Commodity::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get();
@@ -365,6 +365,7 @@ class UserController extends Controller
 
         $prefill = [
             'growers' => $user->growers->pluck('id')->toArray(),
+            'fbos' => $user->fbos->pluck('id')->toArray(),
         ];
 
         return view('users.edit', compact('user', 'companies', 'roles', 'commodities', 'groups', 'growers', 'fbos', 'prefill'));
@@ -659,7 +660,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
-            // soft deletes instead of delete to preserve document relationships
+            // soft deletes instead of delete to preserve file relationships
             $user->delete();
 
             // log activity and create notification
@@ -797,9 +798,9 @@ class UserController extends Controller
             if (!$user->trashed()) {
                 return back()->withErrors(['error' => 'User must be soft deleted before permanent deletion.']);
             }
-            // make sure user has no documents
-            if ($user->documents()->exists()) {
-                return back()->withErrors(['error' => 'User cannot be permanently deleted because they have associated documents. Please reassign or delete the documents first.']);
+            // make sure user has no files
+            if ($user->files()->exists()) {
+                return back()->withErrors(['error' => 'User cannot be permanently deleted because they have associated files. Please reassign or delete the files first.']);
             }
             
             // permanently delete user

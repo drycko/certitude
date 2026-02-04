@@ -44,7 +44,7 @@ class FboController extends Controller
     public function index(Request $request)
     {
         // List all FBOs
-        $query = Fbo::with('growers', 'documents');
+        $query = Fbo::with('growers', 'files');
 
         // Build filters array
         $filters = [
@@ -187,7 +187,7 @@ class FboController extends Controller
     public function show(Fbo $fbo)
     {
         // Show details of a specific FBO
-        $fbo->load('growers', 'documents');
+        $fbo->load('growers', 'files');
         return view('fbos.show', compact('fbo'));
     }
 
@@ -296,7 +296,7 @@ class FboController extends Controller
     public function trashed()
     {
         // List all soft-deleted FBOs
-        $fbos = Fbo::onlyTrashed()->with('growers', 'documents')->orderBy('code')->paginate(15);
+        $fbos = Fbo::onlyTrashed()->with('growers', 'files')->orderBy('code')->paginate(15);
         return view('fbos.trashed', compact('fbos'));
     }
 

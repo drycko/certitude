@@ -30,11 +30,11 @@ class UserGroup extends Model
     ];
 
     /**
-     * Get the document types associated with the user group.
+     * Get the file types associated with the user group.
      */
-    public function documentTypes(): BelongsToMany
+    public function fileTypes(): BelongsToMany
     {
-        return $this->belongsToMany(DocumentType::class, 'user_group_document_types', 'user_group_id', 'document_type_id')
+        return $this->belongsToMany(FileType::class, 'user_group_file_types', 'user_group_id', 'file_type_id')
             ->withTimestamps();
     }
 

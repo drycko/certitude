@@ -78,15 +78,15 @@ class CompanyController extends Controller
         // Sorting
         $sortField = $filters['sort_by'];
         $sortOrder = $filters['sort_order'];
-        $allowedSortFields = ['name', 'code', 'contact_person', 'email', 'phone', 'is_active', 'created_at', 'users_count', 'documents_count'];
+        $allowedSortFields = ['name', 'code', 'contact_person', 'email', 'phone', 'is_active', 'created_at', 'users_count', 'files_count'];
         
         if (in_array($sortField, $allowedSortFields) && in_array($sortOrder, ['asc', 'desc'])) {
-            $query->with('users', 'documents', 'creator')
-                ->withCount('users', 'documents')
+            $query->with('users', 'files', 'creator')
+                ->withCount('users', 'files')
                 ->orderBy($sortField, $sortOrder);
         } else {
-            $query->with('users', 'documents', 'creator')
-                ->withCount('users', 'documents')
+            $query->with('users', 'files', 'creator')
+                ->withCount('users', 'files')
                 ->orderBy('name', 'asc');
         }
 
@@ -188,7 +188,7 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         // Show company details
-        $company->load('users', 'documents', 'creator');
+        $company->load('users', 'files', 'creator');
         // $company->logo_url = $company->company_logo_url ? $this->fileStorageService->getUrl($company->company_logo_url) : null;
         \Log::info('Company logo URL: ' . $company->company_logo_url);
         return view('companies.show', compact('company'));
@@ -340,8 +340,8 @@ class CompanyController extends Controller
             $company_name = $company->name;
             // to vaoid cascade delete issues, first dissociate related users
             $company->users()->update(['company_id' => null]);
-            // then dissociate related documents
-            $company->documents()->update(['company_id' => null]);
+            // then dissociate related files
+            $company->files()->update(['company_id' => null]);
             // then dissociate related activities
             $company->deleteActivities();
             // permanently delete company
@@ -399,15 +399,15 @@ class CompanyController extends Controller
         // Sorting
         $sortField = request('sort_by');
         $sortOrder = request('sort_direction');
-        $allowedSortFields = ['name', 'code', 'contact_person', 'email', 'phone', 'is_active', 'created_at', 'users_count', 'documents_count'];
+        $allowedSortFields = ['name', 'code', 'contact_person', 'email', 'phone', 'is_active', 'created_at', 'users_count', 'files_count'];
         if (!in_array($sortField, $allowedSortFields)) {
             $sortField = 'name';
         }
         if (!in_array($sortOrder, ['asc', 'desc'])) {
             $sortOrder = 'asc';
         }
-        $query->with('users', 'documents', 'creator')
-            ->withCount('users', 'documents')->orderBy($sortField, $sortOrder);
+        $query->with('users', 'files', 'creator')
+            ->withCount('users', 'files')->orderBy($sortField, $sortOrder);
 
         // \Log::info($query->toSql());
         // \Log::info($query->getBindings());

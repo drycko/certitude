@@ -34,12 +34,12 @@ class AuthenticatedSessionController extends Controller
         UserActivity::create([
             'user_id' => $user->id,
             'activity_type' => UserActivity::ACTIVITY_TYPES['LOGIN'],
-            'description' => 'User logged in',
-            'subject_type' => 'App\Models\Tenant\User',
-            'subject_id' => $user->id,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'location' => $this->getLocationFromIp($request->ip()),
+            'table_name' => 'users',
+            'record_id' => $user->id,
+            'description' => 'User logged in',
+            'is_read' => false,
         ]);
 
         // Check if user must change password
@@ -64,12 +64,12 @@ class AuthenticatedSessionController extends Controller
             UserActivity::create([
                 'user_id' => $user->id,
                 'activity_type' => UserActivity::ACTIVITY_TYPES['LOGOUT'],
-                'description' => 'User logged out',
-                'subject_type' => 'App\Models\Tenant\User',
-                'subject_id' => $user->id,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
-                'location' => $this->getLocationFromIp($request->ip()),
+                'table_name' => 'users',
+                'record_id' => $user->id,
+                'description' => 'User logged out',
+                'is_read' => false,
             ]);
         }
 

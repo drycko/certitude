@@ -2,14 +2,14 @@
 
 namespace App\Services\Tenant;
 
-use App\Models\User;
+use App\Models\Tenant\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Models\AccessRequest;
-use App\Mail\EmailVerification;
-use App\Mail\AccessRequestDenialEmail;
-use App\Mail\WelcomeEmail;
+use App\Models\Tenant\AccessRequest;
+use App\Mail\Tenant\EmailVerification;
+use App\Mail\Tenant\AccessRequestDenialEmail;
+use App\Mail\Tenant\WelcomeEmail;
 
 class NotificationService
 {
@@ -71,9 +71,9 @@ class NotificationService
     }
 
     /**
-     * Send document expiry alert
+     * Send file expiry alert
      */
-    public function sendExpiryAlert(User $user, $documents): bool
+    public function sendExpiryAlert(User $user, $files): bool
     {
         try {
             // Skip if user is inactive
@@ -89,9 +89,9 @@ class NotificationService
             $context = [
                 'user_id' => $user->id,
                 'email' => $user->email,
-                'document_count' => count($documents),
+                'file_count' => count($files),
             ];
-            Log::info('Document expiry alert sent', $context);
+            Log::info('File expiry alert sent', $context);
             $this->logEmail('info', 'expiry_alert_sent', $context);
 
             return true;
@@ -212,9 +212,9 @@ class NotificationService
     }
 
     /**
-     * Send document upload notification to admins
+     * Send file upload notification to admins
      */
-    public function sendDocumentUploadNotification($document, User $uploader): bool
+    public function sendFileUploadNotification($file, User $uploader): bool
     {
         try {
             // Get admin users (sending to all super-users only)
@@ -223,21 +223,21 @@ class NotificationService
             foreach ($adminUsers as $admin) {
                 $context = [
                     'admin_id' => $admin->id,
-                    'document_id' => $document->id,
+                    'file_id' => $file->id,
                     'uploader_id' => $uploader->id,
                 ];
-                Log::info('Document upload notification sent to admin', $context);
-                $this->logEmail('info', 'document_upload_notification_sent', $context);
+                Log::info('File upload notification sent to admin', $context);
+                $this->logEmail('info', 'file_upload_notification_sent', $context);
             }
 
             return true;
         } catch (\Exception $e) {
             $context = [
-                'document_id' => $document->id,
+                'file_id' => $file->id,
                 'error' => $e->getMessage(),
             ];
-            Log::error('Failed to send document upload notification', $context);
-            $this->logEmail('error', 'document_upload_notification_failed', $context);
+            Log::error('Failed to send file upload notification', $context);
+            $this->logEmail('error', 'file_upload_notification_failed', $context);
             
             return false;
         }
@@ -281,10 +281,7 @@ class NotificationService
         try {
             // Get admin users (sending to all super-users only)
             $adminEmails = [
-                'colette.le.roux@dole.com',
-                'nicolen.mackay@dole.com',
-                'antoinette.opperman@dole.com',
-                'consult@ukuyila.com',
+                'support@certitude.co.za',
             ];
             // Get admin users that are super-users and have emails
             $adminUsers = User::whereIn('email', $adminEmails)->get();

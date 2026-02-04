@@ -78,10 +78,10 @@ class User extends Authenticatable
 	{
 		return $this->belongsTo(Company::class);
 	}
-	// documents uploaded by this user documents (uploaded_by column)
-	public function documents(): HasMany
+	// files uploaded by this user (uploaded_by column)
+	public function files(): HasMany
 	{
-		return $this->hasMany(Document::class, 'uploaded_by');
+		return $this->hasMany(File::class, 'uploaded_by');
 	}
 	
 	public function commodities(): BelongsToMany
@@ -499,7 +499,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Document has no activity logs except for creation
+     * file has no activity logs except for creation
      */
     public function hasNoUserActivities(): bool
     {
@@ -510,7 +510,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get document views count
+     * Get file views count
      */
     public function getViewsCount(): int
     {

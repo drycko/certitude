@@ -21,10 +21,10 @@ class Vessel extends Model
         'attributes' => 'array',
     ];
 
-    // belongs to many relationship with documents
-    public function documents()
+    // belongs to many relationship with files
+    public function files()
     {
-        return $this->belongsToMany(Document::class, 'document_vessels', 'vessel_id', 'document_id')
+        return $this->belongsToMany(File::class, 'file_vessels', 'vessel_id', 'file_id')
             ->withTimestamps();
     }
 }

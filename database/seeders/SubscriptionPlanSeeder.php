@@ -41,7 +41,7 @@ class SubscriptionPlanSeeder extends Seeder
                 'yearly_price' => 54000.00,
                 'features' => json_encode([
                     'powerbi',
-                    'document_management',
+                    'file_management',
                     'user_authentication',
                     'role_based_access',
                     'advanced_audit_logs',
@@ -63,7 +63,7 @@ class SubscriptionPlanSeeder extends Seeder
                 'yearly_price' => 123000.00,
                 'features' => json_encode([
                     'powerbi',
-                    'document_management',
+                    'file_management',
                     'ai_insights',
                     'user_authentication',
                     'role_based_access',

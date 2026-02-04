@@ -22,7 +22,7 @@ class TenantDatabaseSeeder extends Seeder
             CommoditySeeder::class,             // Creates commodities (needed by users)
             FboSeeder::class,                   // Creates FBOs
             UserSeeder::class,                  // Creates users (depends on companies, roles & commodities)
-            DocumentTypeSeeder::class,          // Creates document types
+            FileTypeSeeder::class,          // Creates file types
             UserGroupSeeder::class,             // Creates user groups
             PowerbiLinkTypeSeeder::class,           // Creates PowerBI link types
         ]);

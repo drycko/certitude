@@ -11,35 +11,23 @@ class UserActivity extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tenant_user_activities';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    
+    // Model properties and relationships can be defined here
     protected $fillable = [
         'user_id',
         'activity_type',
-        'description',
-        'subject_type',
-        'subject_id',
-        'properties',
         'ip_address',
         'user_agent',
-        'location',
+        'table_name',
+        'record_id',
+        'description',
         'is_read',
-        'read_at'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'properties' => 'array',
+        'user_id' => 'integer',
+        'record_id' => 'integer',
         'is_read' => 'boolean',
-        'read_at' => 'datetime'
     ];
 
     /**
@@ -57,42 +45,26 @@ class UserActivity extends Model
         'SETTINGS' => 'settings'
     ];
 
-    /**
-     * Get the user that owns the activity.
-     */
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Get the subject of the activity (polymorphic).
-     */
-    public function subject()
+    public function admin()
     {
-        return $this->morphTo();
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Mark the activity as read.
-     */
     public function markAsRead()
     {
-        $this->update([
-            'is_read' => true,
-            'read_at' => now()
-        ]);
+        $this->is_read = true;
+        $this->save();
     }
 
-    /**
-     * Mark the activity as unread.
-     */
     public function markAsUnread()
     {
-        $this->update([
-            'is_read' => false,
-            'read_at' => null
-        ]);
+        $this->is_read = false;
+        $this->save();
     }
 
     /**

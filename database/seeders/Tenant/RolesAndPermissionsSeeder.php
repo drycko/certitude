@@ -32,18 +32,18 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Create permissions
         $permissions = [
-            // Document permissions
-            'view documents',
-            'edit documents',
-            'upload documents',
-            'download documents',
-            'delete documents',
-            'manage all documents',
-            'bulk delete documents',
-            'view public documents',
-            'view private documents',
-            'view documents by commodity',
-            'view documents by grower',
+            // file permissions
+            'view files',
+            'edit files',
+            'upload files',
+            'download files',
+            'delete files',
+            'manage all files',
+            'bulk delete files',
+            'view public files',
+            'view private files',
+            'view files by commodity',
+            'view files by grower',
             
             // User management permissions
             'view users',
@@ -60,11 +60,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'view all users',
             
             // Master data permissions
-            // Document types
-            'create document types',
-            'edit document types',
-            'view document types',
-            'delete document types',
+            // file types
+            'create file types',
+            'edit file types',
+            'view file types',
+            'delete file types',
             // summary type
             'create summary types',
             'edit summary types',
@@ -97,7 +97,7 @@ class RolesAndPermissionsSeeder extends Seeder
             // Role-specific permissions
             'upload to private space',
             'view by attribute type',
-            'filter by document type',
+            'filter by file type',
             'manage user provinces',
             'manage user countries',
             'manage user tags',
@@ -112,7 +112,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view group members',
             
             // Enhanced permission tracking
-            'delete own documents',
+            'delete own files',
             'view permission history',
             'export user data',
             'import user data',
@@ -213,7 +213,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // $adminUser->assignRole($superRole);
 
         // Admin Role
-        // - Main users: Upload/delete document for either a customer or grower
+        // - Main users: Upload/delete file for either a customer or grower
         // - Maintain master data
         $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'tenant']);
         $adminRole->syncPermissions(Permission::all());
@@ -227,12 +227,12 @@ class RolesAndPermissionsSeeder extends Seeder
         // - Only access grower portal with limited rights
         $growerRole = Role::firstOrCreate(['name' => 'grower', 'guard_name' => 'tenant']);
         $growerRole->syncPermissions([
-            'view documents',
-            'view public documents',
-            'view private documents',
-            'view documents by commodity',
-            'view documents by grower',
-            'download documents',
+            'view files',
+            'view public files',
+            'view private files',
+            'view files by commodity',
+            'view files by grower',
+            'download files',
             'view powerbi reports',
             // 'filter powerbi reports by grower',
             'view user dashboard',
@@ -243,18 +243,18 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Customer Role
-        // - Cannot upload documents
+        // - Cannot upload files
         // - Must have one or more Commodity Type
-        // - Can see any document uploaded as a Customer based on Commodity types assigned
+        // - Can see any file uploaded as a Customer based on Commodity types assigned
         // - Can belong to multiple user groups for enhanced access
         // - Only access customer portal with limited rights
         $customerRole = Role::firstOrCreate(['name' => 'customer', 'guard_name' => 'tenant']);
         $customerRole->syncPermissions([
-            // 'view documents',
-            'view public documents',
-            'view documents by commodity',
+            // 'view files',
+            'view public files',
+            'view files by commodity',
             'view by attribute type',
-            'download documents',
+            'download files',
             'view powerbi reports',
             'view user dashboard',
             'change password',

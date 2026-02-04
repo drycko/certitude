@@ -4,8 +4,8 @@ namespace App\Services\Tenant;
 
 use App\Models\Tenant\User;
 use App\Models\Tenant\Grower;
-use App\Models\Tenant\Document;
-use App\Models\Tenant\DocumentType;
+use App\Models\Tenant\File;
+use App\Models\Tenant\FileType;
 use App\Models\Tenant\Commodity;
 use App\Models\Tenant\Fbo;
 use App\Models\Tenant\UserGroup;
@@ -15,52 +15,52 @@ use Illuminate\Support\Collection;
 class UserAccessService
 {
     /**
-     * Get documents accessible by user based on roles, groups, and permissions
+     * Get files accessible by user based on roles, groups, and permissions
      * To-do: We will need to implement more granular and dynamic access controls.
      */
-    public function getAccessibleDocuments(User $user): Builder
+    public function getAccessibleFiles(User $user): Builder
     {
         
-        // temporary: check  if the document_type_id is a top-level if not we change it to parent id and move the current type id to sub_document_type_id
-        // $allDocuments = Document::query();
+        // temporary: check  if the file_type_id is a top-level if not we change it to parent id and move the current type id to sub_file_type_id
+        // $allFiles = File::query();
         // // loop to make the change
-        // $allDocuments->get()->each(function ($document) {
-        //     $docType = $document->documentType;
-        //     if ($docType && $docType->parent_id !== null && $document->sub_document_type_id === null) {
-        //         $document->document_type_id = $docType->parent_id;
-        //         $document->sub_document_type_id = $docType->id;
-        //         $document->save();
+        // $allFiles->get()->each(function ($file) {
+        //     $fileType = $file->fileType;
+        //     if ($fileType && $fileType->parent_id !== null && $file->sub_file_type_id === null) {
+        //         $file->file_type_id = $fileType->parent_id;
+        //         $file->sub_file_type_id = $fileType->id;
+        //         $file->save();
         //     }
-        //     // check if the sub_document_type_id parent_id is not null, then we need to set the document_type_id to that parent id
-        //     if ($docType && $docType->parent_id !== null && $document->sub_document_type_id !== null) {
-        //         $subDocType = $docType;
-        //         if ($subDocType && $subDocType->parent_id !== null) {
-        //             $document->document_type_id = $subDocType->parent_id;
-        //             $document->save();
+        //     // check if the sub_file_type_id parent_id is not null, then we need to set the file_type_id to that parent id
+        //     if ($fileType && $fileType->parent_id !== null && $file->sub_file_type_id !== null) {
+        //         $subFileType = $fileType;
+        //         if ($subFileType && $subFileType->parent_id !== null) {
+        //             $file->file_type_id = $subFileType->parent_id;
+        //             $file->save();
         //         }
         //     }
         // });
 
-        $query = Document::with(['company', 'documentType', 'fbos', 'commodities', 'varieties', 'uploadedBy']);
+        $query = File::with(['company', 'fileType', 'fbos', 'commodities', 'varieties', 'uploadedBy']);
 
-        // If user has 'manage all documents' permission, return all
-        if ($user->hasAnyPermission('manage all documents')) {
-            \Log::info("User {$user->id} has 'manage all documents' permission to file.");
+        // If user has 'manage all files' permission, return all
+        if ($user->hasAnyPermission('manage all files')) {
+            \Log::info("User {$user->id} has 'manage all files' permission to file.");
             // with no active filter;
             return $query;
         }
 
         // Build access conditions based on user's roles and groups
         $query->where(function (Builder $q) use ($user) {
-            \Log::info("Building accessible documents for User {$user->id}");
+            \Log::info("Building accessible files for User {$user->id}");
 
-            // Growers (Role = grower) should only see Quality Documents for their assigned grower(s)
-            if ($user->hasAnyPermission('view documents by grower') && $user->hasRole('grower')) {
+            // Growers (Role = grower) should only see Quality Files for their assigned grower(s)
+            if ($user->hasAnyPermission('view files by grower') && $user->hasRole('grower')) {
                 $userGrowerIds = $user->growers->pluck('id')->toArray();
                 \Log::info("User {$user->id} grower IDs: " . implode(',', $userGrowerIds));
                 
                 if (!empty($userGrowerIds)) {
-                    $restrictedConfig = config('app.grower_restricted_document_types', []);
+                    $restrictedConfig = config('app.grower_restricted_file_types', []);
                     
                     $q->orWhere(function (Builder $sq) use ($userGrowerIds, $restrictedConfig) {
                         $sq->where(function ($metaQuery) use ($userGrowerIds) {
@@ -69,7 +69,7 @@ class UserAccessService
                                 $metaQuery->orWhereJsonContains('metadata->grower_id', (string)$growerId);
                             }
                         })
-                        ->whereHas('documentType', function (Builder $dtq) use ($restrictedConfig) {
+                        ->whereHas('fileType', function (Builder $dtq) use ($restrictedConfig) {
                             // Primary: Use attribute_type field (most reliable)
                             if (isset($restrictedConfig['attribute_type'])) {
                                 $dtq->where('attribute_type', $restrictedConfig['attribute_type']);
@@ -82,19 +82,19 @@ class UserAccessService
                 }
             }
 
-            // Customers (Role = customer) can see all documents for a specific commodity except Quality Documents and then Quality reports.
+            // Customers (Role = customer) can see all files for a specific commodity except Quality Files and then Quality reports.
             if ($user->hasRole('customer')) {
                 $commodityIds = $user->commodities->pluck('id')->toArray();
                 
                 if (!empty($commodityIds)) {
-                    $excludedConfig = config('app.customer_excluded_document_types', []);
+                    $excludedConfig = config('app.customer_excluded_file_types', []);
                     
                     $q->orWhere(function (Builder $sq) use ($commodityIds, $excludedConfig) {
                         $sq->where('is_public', false)
                            ->whereHas('commodities', function (Builder $cq) use ($commodityIds) {
                                $cq->whereIn('commodity_id', $commodityIds);
                            })
-                           ->whereDoesntHave('documentType', function (Builder $dtq) use ($excludedConfig) {
+                           ->whereDoesntHave('fileType', function (Builder $dtq) use ($excludedConfig) {
                                // Primary: Use attribute_type field (most reliable)
                                if (isset($excludedConfig['attribute_type'])) {
                                    $dtq->where('attribute_type', $excludedConfig['attribute_type']);
@@ -108,8 +108,8 @@ class UserAccessService
             }
 
             
-            // Public documents accessible by commodity
-            if ($user->hasAnyPermission('view public documents')) {
+            // Public files accessible by commodity
+            if ($user->hasAnyPermission('view public files')) {
                 $commodityIds = $user->commodities->pluck('id')->toArray();
                 if (!empty($commodityIds)) {
                     $q->orWhere(function (Builder $sq) use ($commodityIds) {
@@ -121,12 +121,12 @@ class UserAccessService
                 }
             }
 
-            // Documents by user groups
+            // Files by user groups
             // $this->addGroupBasedAccess($q, $user);
 
-            // Documents uploaded by user
-            if ($user->hasAnyPermission('view documents')) {
-                // \Log::info("User {$user->id} has 'view documents' permission to view this: {$q->toSql()}");
+            // Files uploaded by user
+            if ($user->hasAnyPermission('view files')) {
+                // \Log::info("User {$user->id} has 'view files' permission to view this: {$q->toSql()}");
                 $q->orWhere('uploaded_by', $user->id);
             }
 
@@ -134,29 +134,29 @@ class UserAccessService
 
         // if user does not have any access, return empty
         if (!$query->exists()) {
-            \Log::info("User {$user->id} has no document access.");
+            \Log::info("User {$user->id} has no file access.");
             $query->whereRaw('1 = 0'); // no access
         }
         return $query->where('is_active', true);
     }
 
     /**
-     * Add group-based document access to query
+     * Add group-based file access to query
      */
     private function addGroupBasedAccess(Builder $query, User $user): void
     {
         foreach ($user->activeUserGroups as $group) {
-            // Check if group has specific document access rules
+            // Check if group has specific file access rules
             $groupMetadata = $group->metadata ?? [];
             
-            if (isset($groupMetadata['document_access'])) {
-                $accessRules = $groupMetadata['document_access'];
+            if (isset($groupMetadata['file_access'])) {
+                $accessRules = $groupMetadata['file_access'];
                 
                 // Apply group-specific access rules
                 $query->orWhere(function (Builder $sq) use ($accessRules, $user) {
-                    if (isset($accessRules['document_types'])) {
-                        $sq->whereHas('documentType', function (Builder $dtq) use ($accessRules) {
-                            $dtq->whereIn('name', $accessRules['document_types']);
+                    if (isset($accessRules['file_types'])) {
+                        $sq->whereHas('fileType', function (Builder $dtq) use ($accessRules) {
+                            $dtq->whereIn('name', $accessRules['file_types']);
                         });
                     }
                     
@@ -175,36 +175,36 @@ class UserAccessService
     }
 
     /**
-     * Check if user can view specific document
+     * Check if user can view specific file
      */
-    public function canViewDocument(User $user, Document $document): bool
+    public function canViewFile(User $user, File $file): bool
     {
-        if (!$document->is_active) {
+        if (!$file->is_active) {
             return false;
         }
 
         // Admin/Super roles can view all
-        if ($user->hasAnyPermission('manage all documents')) {
+        if ($user->hasAnyPermission('manage all files')) {
             return true;
         }
 
-        // Document owner can always view
-        if ($document->user_id === $user->id) {
+        // File owner can always view
+        if ($file->user_id === $user->id) {
             return true;
         }
 
-        // Check if document is in user's accessible documents
-        return $this->getAccessibleDocuments($user)
-                    ->where('documents.id', $document->id)
+        // Check if file is in user's accessible files
+        return $this->getAccessibleFiles($user)
+                    ->where('files.id', $file->id)
                     ->exists();
     }
 
     /**
-     * Check if user can upload documents
+     * Check if user can upload files
      */
-    public function canUploadDocuments(User $user): bool
+    public function canUploadFiles(User $user): bool
     {
-        return $user->hasAnyPermission('upload documents');
+        return $user->hasAnyPermission('upload files');
     }
 
     /**
@@ -216,17 +216,17 @@ class UserAccessService
     }
 
     /**
-     * Check if user can delete document
+     * Check if user can delete file
      */
-    public function canDeleteDocument(User $user, Document $document): bool
+    public function canDeleteFile(User $user, File $file): bool
     {
         // Admin roles with delete permission
-        if ($user->hasAnyPermission('delete documents')) {
+        if ($user->hasAnyPermission('delete files')) {
             return true;
         }
 
-        // Document owner with delete permission
-        if ($document->user_id === $user->id && $user->hasAnyPermission('delete own documents')) {
+        // File owner with delete permission
+        if ($file->user_id === $user->id && $user->hasAnyPermission('delete own files')) {
             return true;
         }
 
@@ -234,25 +234,25 @@ class UserAccessService
     }
 
     /**
-     * Check if user can edit document
+     * Check if user can edit file
      */
-    public function canEditDocument(User $user, Document $document): bool
+    public function canEditFile(User $user, File $file): bool
     {
         // Admin roles with edit permission and is super-user or admin
-        if ($user->hasAnyPermission('edit documents') && ($user->hasRole('super-user') || $user->hasRole('admin'))) {
+        if ($user->hasAnyPermission('edit files') && ($user->hasRole('super-user') || $user->hasRole('admin'))) {
             return true;
         }
 
-        // Document owner with edit permission
-        if ($document->uploaded_by === $user->id && $user->hasAnyPermission('edit own documents')) {
+        // File owner with edit permission
+        if ($file->uploaded_by === $user->id && $user->hasAnyPermission('edit own files')) {
             return true;
         }
 
-        // User can edit documents for their assigned grower(s)
-        if ($user->hasAnyPermission('edit documents by grower')) {
+        // User can edit files for their assigned grower(s)
+        if ($user->hasAnyPermission('edit files by grower')) {
             $userGrowerIds = $user->growers->pluck('id')->toArray();
-            $documentGrowerId = $document->metadata['grower_id'] ?? null;
-            if ($documentGrowerId && in_array($documentGrowerId, $userGrowerIds)) {
+            $fileGrowerId = $file->metadata['grower_id'] ?? null;
+            if ($fileGrowerId && in_array($fileGrowerId, $userGrowerIds)) {
                 return true;
             }
         }
@@ -261,12 +261,12 @@ class UserAccessService
     }
 
     /**
-     * Get filtered documents based on search criteria
+     * Get filtered files based on search criteria
      */
-    public function getFilteredDocuments(User $user, array $filters = []): Builder
+    public function getFilteredFiles(User $user, array $filters = []): Builder
     {
-        $query = $this->getAccessibleDocuments($user);
-        $expiryDays = config('app.document_days_until_expiry_warning');
+        $query = $this->getAccessibleFiles($user);
+        $expiryDays = config('app.file_days_until_expiry_warning');
 
         // Apply search filters
         if (!empty($filters['search'])) {
@@ -278,12 +278,12 @@ class UserAccessService
             });
         }
 
-        if (!empty($filters['document_type_id'])) {
-            $query->where('document_type_id', $filters['document_type_id']);
+        if (!empty($filters['file_type_id'])) {
+            $query->where('file_type_id', $filters['file_type_id']);
         }
 
-        if (!empty($filters['sub_document_type_id'])) {
-            $query->where('sub_document_type_id', $filters['sub_document_type_id']);
+        if (!empty($filters['sub_file_type_id'])) {
+            $query->where('sub_file_type_id', $filters['sub_file_type_id']);
         }
 
         if (!empty($filters['commodity_id'])) {
@@ -360,11 +360,11 @@ class UserAccessService
     }
 
     /**
-     * Get documents accessible by user for specific commodity
+     * Get files accessible by user for specific commodity
      */
-    public function getAccessibleDocumentsByCommodity($commodity, User $user): Builder
+    public function getAccessibleFilesByCommodity($commodity, User $user): Builder
     {
-        $query = $this->getAccessibleDocuments($user)
+        $query = $this->getAccessibleFiles($user)
                       ->whereHas('commodities', function (Builder $cq) use ($commodity) {
                           $cq->where('commodity_id', $commodity->id);
                       });
@@ -377,8 +377,8 @@ class UserAccessService
      */
     public function getUserCommodityIds(User $user): array
     {
-        if ($user->hasAnyPermission('manage all documents')) {
-            // Admin, Super, and Dole users can access all commodities
+        if ($user->hasAnyPermission('manage all files')) {
+            // Admin, Super, and other management users can access all commodities
             return Commodity::pluck('id')->toArray();
         }
 
@@ -390,8 +390,8 @@ class UserAccessService
      */
     public function getAccessibleCommodities(User $user)
     {
-        if ($user->hasAnyPermission('manage all documents')) {
-            // Admin, Super, and Dole users can access all commodities
+        if ($user->hasAnyPermission('manage all files')) {
+            // Admin, Super, and other management users can access all commodities
             return Commodity::where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderBy('name')
@@ -461,9 +461,9 @@ class UserAccessService
                     }
                 }
                 
-                // Apply document type restrictions
-                if (isset($context['document_type']) && isset($restrictions['document_types'])) {
-                    if (!in_array($context['document_type'], $restrictions['document_types'])) {
+                // Apply file type restrictions
+                if (isset($context['file_type']) && isset($restrictions['file_types'])) {
+                    if (!in_array($context['file_type'], $restrictions['file_types'])) {
                         return false;
                     }
                 }
@@ -528,20 +528,20 @@ class UserAccessService
     {
         $permissionMapping = [
             // Legacy -> Current permission mapping
-            'view_documents' => 'view documents',
-            'upload_documents' => 'upload documents',
-            'download_documents' => 'download documents',
-            'delete_documents' => 'delete documents',
+            'view_documents' => 'view files',
+            'upload_documents' => 'upload files',
+            'download_documents' => 'download files',
+            'delete_documents' => 'delete files',
             'view_summary' => 'view summary',
             'view_users' => 'view users',
             'manage_users' => 'create users',
             'edit_users' => 'edit users',
             'delete_users' => 'delete users',
             'view_by_attribute_type' => 'view by attribute type',
-            'manage_documents' => 'manage all documents',
-            'view_private_documents' => 'view private documents',
-            'view_public_documents' => 'view public documents',
-            'view_private_citrus_docs' => 'view private documents', // Custom mapping
+            'manage_documents' => 'manage all files',
+            'view_private_documents' => 'view private files',
+            'view_public_documents' => 'view public files',
+            'view_private_citrus_docs' => 'view private files', // Custom mapping
             'filter_summary_by_grower' => 'filter summary by grower',
         ];
 
@@ -750,50 +750,50 @@ class UserAccessService
     }
 
     /**
-     * Get documentTypes accessible by user based on attribute_type in type model
-     * Document types have role access too, but the attribute_type supersedes.
-     * For example, if a user has access to 'Quality Documents' via role, but the attribute_type is 'grower' and the user does not have the role 'grower', they should not see the document type. this applies ton non-admin users.
+     * Get fileTypes accessible by user based on attribute_type in type model
+     * File types have role access too, but the attribute_type supersedes.
+     * For example, if a user has access to 'Quality Files' via role, but the attribute_type is 'grower' and the user does not have the role 'grower', they should not see the file type. this applies ton non-admin users.
      * Attribute_type values can be: grower, customer, admin, super-user, none, etc.
-     * Attrribute none means everyone with view documents permission can see it.
+     * Attrribute none means everyone with view files permission can see it.
      */
-    public function getAccessibleDocumentTypes(User $user, bool $isSubDocumentType): Builder
+    public function getAccessibleFileTypes(User $user, bool $isSubFileType): Builder
     {
-        $query = DocumentType::query()->where('is_active', true);
-        if ($isSubDocumentType) {
+        $query = FileType::query()->where('is_active', true);
+        if ($isSubFileType) {
             $query->whereNotNull('parent_id');
         } else {
             $query->whereNull('parent_id');
         }
 
-        // If user has 'manage all documents' permission, return all
-        if ($user->hasAnyPermission('manage all documents')) {
-            \Log::info("User {$user->id} has 'manage all documents' permission to file.");
+        // If user has 'manage all files' permission, return all
+        if ($user->hasAnyPermission('manage all files')) {
+            \Log::info("User {$user->id} has 'manage all files' permission to file.");
             return $query;
         }
 
         // Build access conditions based on user's roles
         $query->where(function (Builder $q) use ($user) {
-            // Document types for growers
+            // File types for growers
             if ($user->hasRole('grower')) {
                 $q->orWhere('attribute_type', 'grower');
             }
 
-            // Document types for customers
+            // File types for customers
             if ($user->hasRole('customer')) {
                 $q->orWhere('attribute_type', 'customer');
             }
 
-            // Document types for admin
+            // File types for admin
             if ($user->hasRole('admin')) {
                 $q->orWhere('attribute_type', 'admin');
             }
 
-            // Document types for super-user
+            // File types for super-user
             if ($user->hasRole('super-user')) {
                 $q->orWhere('attribute_type', 'super-user');
             }
 
-            // Document types with no attribute_type (public)
+            // File types with no attribute_type (public)
             $q->orWhereNull('attribute_type')
               ->orWhere('attribute_type', 'none');
         });
@@ -801,39 +801,39 @@ class UserAccessService
         return $query;
     }
 
-    public function getAccessibleSubDocumentTypes(User $user): Builder
+    public function getAccessibleSubFileTypes(User $user): Builder
     {
-        $query = DocumentType::query()->where('is_active', true)->whereNotNull('parent_id');
+        $query = FileType::query()->where('is_active', true)->whereNotNull('parent_id');
 
-        // If user has 'manage all documents' permission, return all
-        if ($user->hasAnyPermission('manage all documents')) {
-            \Log::info("User {$user->id} has 'manage all documents' permission to file.");
+        // If user has 'manage all files' permission, return all
+        if ($user->hasAnyPermission('manage all files')) {
+            \Log::info("User {$user->id} has 'manage all files' permission to file.");
             return $query;
         }
 
         // Build access conditions based on user's roles
         $query->where(function (Builder $q) use ($user) {
-            // Document types for growers
+            // File types for growers
             if ($user->hasRole('grower')) {
                 $q->orWhere('attribute_type', 'grower');
             }
 
-            // Document types for customers
+            // File types for customers
             if ($user->hasRole('customer')) {
                 $q->orWhere('attribute_type', 'customer');
             }
 
-            // Document types for admin
+            // File types for admin
             if ($user->hasRole('admin')) {
                 $q->orWhere('attribute_type', 'admin');
             }
 
-            // Document types for super-user
+            // File types for super-user
             if ($user->hasRole('super-user')) {
                 $q->orWhere('attribute_type', 'super-user');
             }
 
-            // Document types with no attribute_type (public)
+            // File types with no attribute_type (public)
             $q->orWhereNull('attribute_type')
               ->orWhere('attribute_type', 'none');
         });

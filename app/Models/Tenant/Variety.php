@@ -22,10 +22,10 @@ class Variety extends Model
         'attributes' => 'array',
     ];
 
-    // belongs to many relationship with documents
-    public function documents()
+    // belongs to many relationship with files
+    public function files()
     {
-        return $this->belongsToMany(Document::class, 'document_varieties', 'variety_id', 'document_id')
+        return $this->belongsToMany(File::class, 'file_varieties', 'variety_id', 'file_id')
             ->withTimestamps();
     }
 }
