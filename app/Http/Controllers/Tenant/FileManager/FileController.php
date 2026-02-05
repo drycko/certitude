@@ -118,7 +118,7 @@ class FileController extends Controller
             ->limit(8)
             ->get();
 
-        return view('tenant.file.index', compact(
+        return view('tenant.files.index', compact(
             'files',
             'fileTypes',
             'subFileTypes',
@@ -185,7 +185,7 @@ class FileController extends Controller
                 'Accessed file upload form'
             );
 
-            return view('tenant.file.create', compact('fileTypes', 'subFileTypes', 'commodities', 'fbos', 'companies', 'maxFileSize', 'allowedFileExtensions', 'growers', 'defaultGrowerId', 'varieties'));
+            return view('tenant.files.create', compact('fileTypes', 'subFileTypes', 'commodities', 'fbos', 'companies', 'maxFileSize', 'allowedFileExtensions', 'growers', 'defaultGrowerId', 'varieties'));
 
         } catch (\Exception $e) {
             \Log::error('Error loading file upload form: ' . $e->getMessage());
@@ -218,7 +218,7 @@ class FileController extends Controller
                 'commodities.*' => 'exists:commodities,id',
                 'file' => 'required|file|max:' . $maxFileSize, // 15MB max
                 'is_public' => 'boolean',
-                'expiry_date' => 'nullable|date|after:today',
+                'expiry_date' => 'nullable|date',
                 'season_year' => 'nullable|integer|min:2018|max:2050',
                 'description' => 'nullable|string|max:1000',
                 'varieties' => 'nullable|array',
@@ -367,7 +367,7 @@ class FileController extends Controller
                 ? 'file uploaded successfully.'
                 : count($files) . ' file uploaded successfully.';
 
-            return redirect()->route('files.index')->with('success', $message);
+            return redirect()->route('tenant.files.index')->with('success', $message);
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -448,7 +448,7 @@ class FileController extends Controller
         // vessels from 
         $vessels = File::getDistinctVesselNames();
 
-        return view('files.show', compact(
+        return view('tenant.files.show', compact(
             'file',
             'filters',
             'fileTypes',
@@ -475,15 +475,12 @@ class FileController extends Controller
             abort(403, 'You do not have permission to edit this file.');
         }
 
-        $fileTypes = FileType::where('is_active', true)->where('parent_id', null)->orderBy('name')->get();
-        $subFileTypes = FileType::where('is_active', true)
-            ->where('parent_id', '!=', null)
-            ->orderBy('name')
-            ->get();
-        $commodities = Commodity::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get();
-        $fbos = Fbo::where('is_active', true)->orderBy('name')->get();
+        $fileTypes = $this->userAccessService->getAccessibleFileTypes($user, false)->orderBy('name')->get();
+        $subFileTypes = $this->userAccessService->getAccessibleFileTypes($user, true)->orderBy('name')->get();
+        $commodities = $this->userAccessService->getAccessibleCommoditiesForUser($user)->orderBy('sort_order')->orderBy('name')->get();
+        $fbos = $this->userAccessService->getAccessibleFbos($user)->orderBy('name')->get();
         $companies = \App\Models\Tenant\Company::where('is_active', true)->orderBy('name')->get();
-        $growers = Grower::where('is_active', true)->orderBy('name')->get();
+        $growers = $this->userAccessService->getAccessibleGrowers($user)->orderBy('name')->get();
         $varieties = Variety::where('is_active', true)->orderBy('name')->get();
         // $vessels = Vessel::where('is_active', true)->orderBy('name')->get();
         // get grower number from user table
@@ -514,7 +511,7 @@ class FileController extends Controller
             'Accessed edit form for file: ' . $file->title
         );
 
-        return view('files.edit', compact(
+        return view('tenant.files.edit', compact(
             'file', 
             'fileTypes', 
             'subFileTypes', 
@@ -674,7 +671,7 @@ class FileController extends Controller
 
             // Redirect back to the file index page with pagination preserved
             $page = $request->input('page', 1);
-            return redirect()->route('files.index', ['page' => $page])
+            return redirect()->route('tenant.files.index', ['page' => $page])
                 ->with('success', 'file updated successfully.');
 
         } catch (\Exception $e) {
@@ -721,22 +718,39 @@ class FileController extends Controller
     {
         $user = Auth::user();
         if (!$this->userAccessService->canViewFile($user, $file)) {
+            \Log::warning('Unauthorized preview attempt', ['user_id' => $user->id, 'file_id' => $file->id]);
             abort(403, 'You do not have permission to preview this file.');
         }
         if (!$this->fileStorageService->exists($file->file_path)) {
+            \Log::error('File not found for preview', ['file_id' => $file->id, 'file_path' => $file->file_path]);
             abort(404, 'File not found.');
         }
-        $fileContents = $this->fileStorageService->get($file->file_path);
-        // Log preview activity
-        $this->logUserActivity(
-            'preview',
-            'files',
-            $file->id,
-            'Previewed file: ' . $file->title
-        );
-        return response($fileContents)
-            ->header('Content-Type', $file->mime_type)
-            ->header('Content-Disposition', 'inline; filename="' . $file->original_filename . '"');
+        
+        try {
+            $fileContents = $this->fileStorageService->get($file->file_path);
+            
+            // Log preview activity
+            $this->logUserActivity(
+                'preview',
+                'files',
+                $file->id,
+                'Previewed file: ' . $file->title
+            );
+            
+            return response($fileContents)
+                ->header('Content-Type', $file->mime_type)
+                ->header('Content-Disposition', 'inline; filename="' . $file->original_filename . '"')
+                ->header('X-Frame-Options', 'SAMEORIGIN')
+                ->header('Cache-Control', 'private, max-age=3600')
+                ->header('Access-Control-Allow-Origin', request()->getSchemeAndHttpHost());
+        } catch (\Exception $e) {
+            \Log::error('Error loading file preview', [
+                'file_id' => $file->id,
+                'file_path' => $file->file_path,
+                'error' => $e->getMessage()
+            ]);
+            abort(500, 'Failed to load file preview.');
+        }
     }
 
     public function destroy(File $file)
@@ -773,7 +787,7 @@ class FileController extends Controller
             }
 
             // Otherwise, classic redirect
-            return redirect()->route('files.index')
+            return redirect()->route('tenant.files.index')
                 ->with('success', 'file deleted successfully.');
 
         } catch (\Exception $e) {
@@ -910,7 +924,7 @@ class FileController extends Controller
             'Accessed trashed file listing'
         );
 
-        return view('files.trashed', compact('files', 'stats', 'fileTypes', 'commodities', 'fbos', 'filters'));
+        return view('tenant.files.trashed', compact('files', 'stats', 'fileTypes', 'commodities', 'fbos', 'filters'));
     }
 
     /**
@@ -945,7 +959,7 @@ class FileController extends Controller
             
             DB::commit();
             
-            return redirect()->route('files.show', $file)
+            return redirect()->route('tenant.files.show', $file)
                 ->with('success', 'file restored successfully.');
 
         } catch (\Exception $e) {
@@ -991,7 +1005,7 @@ class FileController extends Controller
             
             DB::commit();
             
-            return redirect()->route('trashed-data.file.index')
+            return redirect()->route('tenant.files.trashed')
                 ->with('success', 'file permanently deleted.');
 
         } catch (\Exception $e) {
@@ -1102,7 +1116,7 @@ class FileController extends Controller
             
             DB::commit();
             
-            return redirect()->route('trashed-data.file.index')
+            return redirect()->route('tenant.trashed-data.file.index')
                 ->with('success', "{$count} file(s) restored successfully.");
 
         } catch (\Exception $e) {
@@ -1158,7 +1172,7 @@ class FileController extends Controller
             // Reset auto-increment
             DB::statement('ALTER TABLE file AUTO_INCREMENT = 1');
             
-            return redirect()->route('trashed-data.file.index')
+            return redirect()->route('tenant.trashed-data.file.index')
                 ->with('success', "{$count} file(s) permanently deleted. Auto-increment reset.");
 
         } catch (\Exception $e) {
@@ -1216,7 +1230,7 @@ class FileController extends Controller
             'Accessed bulk file management page'
         );
 
-        return view('files.bulk', compact('files', 'stats', 'fileTypes', 'commodities', 'fbos', 'companies'));
+        return view('tenant.files.bulk', compact('files', 'stats', 'fileTypes', 'commodities', 'fbos', 'companies'));
     }
 
     /**

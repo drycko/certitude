@@ -6,7 +6,7 @@ use App\Models\Tenant\Fbo;
 use App\Models\Tenant\Grower;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\NotificationService;
+use App\Services\Tenant\NotificationService;
 use App\Services\Tenant\UserAccessService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

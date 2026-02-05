@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
     {{-- <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li> --}}
-    <li class="breadcrumb-item"><a href="{{ route('files.index') }}">Files</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('tenant.files.index') }}">Files</a></li>
     <li class="breadcrumb-item">Upload</li>
 @endsection
 
@@ -33,7 +33,7 @@
 @endif
 <div class="row">
     <div class="col-lg-12">
-        <form method="POST" action="{{ route('files.store') }}" enctype="multipart/form-data" id="uploadForm">
+        <form method="POST" action="{{ route('tenant.files.store') }}" enctype="multipart/form-data" id="uploadForm">
             @csrf
             <div class="row">
                 <!-- Left Column - File Information -->
@@ -277,7 +277,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="feather-upload me-2"></i>Upload File
                                 </button>
-                                <a href="{{ route('files.index') }}" class="btn btn-light">
+                                <a href="{{ route('tenant.files.index') }}" class="btn btn-light">
                                     <i class="feather-x me-2"></i>Cancel
                                 </a>
                             </div>

@@ -10,7 +10,7 @@ use App\Models\Tenant\Company;
 use App\Models\Tenant\Commodity;
 use App\Models\Tenant\Grower;
 use App\Models\Tenant\UserGroup;
-use App\Services\NotificationService;
+use App\Services\Tenant\NotificationService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;

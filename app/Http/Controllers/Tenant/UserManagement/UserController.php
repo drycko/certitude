@@ -10,7 +10,7 @@ use App\Models\Tenant\UserGroup;
 use App\Models\Tenant\Grower;
 use App\Models\Tenant\Fbo;
 use App\Models\Tenant\AccessRequest;
-use App\Services\NotificationService;
+use App\Services\Tenant\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;

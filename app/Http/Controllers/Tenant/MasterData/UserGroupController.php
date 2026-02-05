@@ -7,7 +7,7 @@ use App\Models\Tenant\UserGroup;
 use App\Models\Tenant\User;
 use App\Models\Tenant\PowerbiLinkType;
 use App\Models\Tenant\FileType;
-use App\Services\NotificationService;
+use App\Services\Tenant\NotificationService;
 use App\Services\Tenant\UserAccessService;
 use Illuminate\Http\Request;
 

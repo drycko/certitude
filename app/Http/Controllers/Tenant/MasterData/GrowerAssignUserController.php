@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\GrowerUser;
 use App\Models\Tenant\Grower;
 use App\Models\Tenant\User;
-use App\Services\NotificationService;
+use App\Services\Tenant\NotificationService;
 use Illuminate\Http\Request;
 
 class GrowerAssignUserController extends Controller

@@ -256,7 +256,23 @@ class File extends Model
     }
 
     /**
+     * Get files view users
+     * access as $file->viewers
+     */
+    public function getViewersAttribute()
+    {
+        $userIds = UserActivity::where('table_name', 'files')
+            ->where('record_id', $this->id)
+            ->where('activity_type', 'view')
+            ->distinct()
+            ->pluck('user_id');
+
+        return User::whereIn('id', $userIds)->get();
+    }
+
+    /**
      * Get files views count
+     * access as $file->views_count
      */
     public function getViewsCount(): int
     {

@@ -89,7 +89,7 @@
     <nav class="nxl-navigation">
         <div class="navbar-wrapper">
             <div class="m-header">
-                <a href="{{ route('dashboard') }}" class="b-brand">
+                <a href="{{ route('tenant.dashboard') }}" class="b-brand">
                     <!-- ========   change your logo hear   ============ -->
                     <img src="{{ asset('assets/images/certitude-logo-140.png') }}" alt="" class="logo logo-lg">
                     <img src="{{ asset('assets/images/certitude-logo-icon-abbr.png') }}" alt="" class="logo logo-sm">
@@ -100,8 +100,8 @@
                     <li class="nxl-item nxl-caption">
                         <label>Navigation</label>
                     </li>
-                    <li class="nxl-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                        <a href="{{ route('dashboard') }}" class="nxl-link">
+                    <li class="nxl-item {{ request()->routeIs('tenant.dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('tenant.dashboard') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-airplay"></i></span>
                             <span class="nxl-mtext">Dashboard</span>
                         </a>
@@ -112,9 +112,9 @@
                             <span class="nxl-mtext">Files</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item {{ request()->routeIs('files.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('files.index') }}">All Files</a></li>
-                            <li class="nxl-item {{ request()->routeIs('files.create') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('files.create') }}">Upload</a></li>
-                            <li class="nxl-item {{ request()->routeIs('trashed-data.files.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('trashed-data.files.index') }}">Trash</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.files.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.files.index') }}">All Files</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.files.create') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.files.create') }}">Upload</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.trashed-data.files.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.trashed-data.files.index') }}">Trash</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -123,9 +123,9 @@
                             <span class="nxl-mtext">PowerBi</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item {{ request()->routeIs('powerbi-links.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('powerbi-links.index') }}">All Reports</a></li>
-                            <li class="nxl-item {{ request()->routeIs('powerbi-links.create') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('powerbi-links.create') }}">Add New</a></li>
-                            <li class="nxl-item {{ request()->routeIs('trashed-data.powerbi-links.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('trashed-data.powerbi-links.index') }}">Trash</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.powerbi-links.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.powerbi-links.index') }}">All Reports</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.powerbi-links.create') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.powerbi-links.create') }}">Add New</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.trashed-data.powerbi-links.index') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.trashed-data.powerbi-links.index') }}">Trash</a></li>
                         </ul>
                     </li>
                     {{-- <li class="nxl-item nxl-hasmenu">
@@ -156,9 +156,9 @@
                             <span class="nxl-mtext">Access Control</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item {{ request()->routeIs('users') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('users.index') }}">Users</a></li>
-                            <li class="nxl-item {{ request()->routeIs('roles') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('roles.index') }}">Roles</a></li>
-                            <li class="nxl-item {{ request()->routeIs('permissions') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('permissions.index') }}">Permissions</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.users.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.users.index') }}">Users</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.roles.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.roles.index') }}">Roles</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.permissions.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.permissions.index') }}">Permissions</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -167,14 +167,14 @@
                             <span class="nxl-mtext">Master Data</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item {{ request()->routeIs('master-data.companies.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.companies.index') }}">Companies</a></li>
-                            <li class="nxl-item {{ request()->routeIs('master-data.varieties.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.varieties.index') }}">Crop Varieties</a></li>
-                            <li class="nxl-item {{ request()->routeIs('master-data.file-types.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.file-types.index') }}">Folders</a></li>
-                            <li class="nxl-item {{ request()->routeIs('master-data.fbos.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.fbos.index') }}">FBOs</a></li>
-                            <li class="nxl-item {{ request()->routeIs('master-data.growers.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.growers.index') }}">Growers</a></li>
-                            <li class="nxl-item {{ request()->routeIs('master-data.commodities.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.commodities.index') }}">Commodities</a></li>
-                            <li class="nxl-item {{ request()->routeIs('master-data.powerbi-link-types.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.powerbi-link-types.index') }}">PowerBi Types</a></li>
-                            <li class="nxl-item {{ request()->routeIs('master-data.vessels.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('master-data.vessels.index') }}">Vessels</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.master-data.companies.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.master-data.companies.index') }}">Companies</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.master-data.varieties.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.master-data.varieties.index') }}">Crop Varieties</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.master-data.file-types.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.master-data.file-types.index') }}">Folders</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.master-data.fbos.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.master-data.fbos.index') }}">FBOs</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.master-data.growers.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.master-data.growers.index') }}">Growers</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.master-data.commodities.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.master-data.commodities.index') }}">Commodities</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.master-data.powerbi-link-types.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.master-data.powerbi-link-types.index') }}">PowerBi Types</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.master-data.vessels.*') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.master-data.vessels.index') }}">Vessels</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -194,7 +194,7 @@
                         </a>
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="#!">Support</a></li>
-                            <li class="nxl-item {{ request()->routeIs('knowledge-base') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('knowledge-base') }}">KnowledgeBase</a></li>
+                            <li class="nxl-item {{ request()->routeIs('tenant.knowledge-base') ? 'active' : '' }}"><a class="nxl-link" href="{{ route('tenant.knowledge-base') }}">KnowledgeBase</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="/docs/documentations">Documentations</a></li>
                         </ul>
                     </li>
@@ -627,7 +627,7 @@
     <!--! ================================================================ !-->
     <!--! [Start] Main Content !-->
     <!--! ================================================================ !-->
-    @if(request()->routeIs('files.index'))
+    @if(request()->routeIs('tenant.files.index'))
     <main class="nxl-container apps-container apps-storage">
         <div class="nxl-content without-header nxl-full-content">
             <!-- [ Main Content ] start -->
@@ -646,7 +646,7 @@
                         @yield('breadcrumb')
                     </ul>
                 </div>
-                @if(request()->routeIs('files.index'))
+                @if(request()->routeIs('tenant.files.index'))
                 <div class="page-header-right ms-auto">
                     <div class="page-header-right-items">
                         <div class="d-flex d-md-none">

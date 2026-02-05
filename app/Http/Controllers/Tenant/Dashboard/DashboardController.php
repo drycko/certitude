@@ -256,4 +256,12 @@ class DashboardController extends Controller
             ->get();
         return view('dashboard.help', compact('articles'));
     }
+
+    /**
+     * Display an error page for tenants
+     */
+    public function error()
+    {
+        return view('tenant.dashboard.error');
+    }
 }

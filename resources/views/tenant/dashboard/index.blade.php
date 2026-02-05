@@ -74,7 +74,7 @@
                         <div class="card-header">
                             <h5 class="card-title">Recent Files</h5>
                             <div class="card-header-action">
-                                <a href="{{ route('files.index') }}" class="btn btn-sm btn-light-brand">View All</a>
+                                <a href="{{ route('tenant.files.index') }}" class="btn btn-sm btn-light-brand">View All</a>
                             </div>
                         </div>
                         <div class="card-body custom-card-action">
@@ -85,7 +85,7 @@
                                             <i class="feather-file-text"></i>
                                         </div>
                                         <div>
-                                            <a href="{{ route('files.show', $file) }}" class="fw-bold d-block mb-1">{{ $file->title }}</a>
+                                            <a href="{{ route('tenant.files.show', $file) }}" class="fw-bold d-block mb-1">{{ $file->title }}</a>
                                             <div class="fs-11 text-muted">
                                                 <span>{{ $file->fileType->name ?? 'N/A' }}</span>
                                                 <span class="mx-2">•</span>
@@ -94,7 +94,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <a href="{{ route('files.show', $file) }}" class="avatar-text avatar-md">
+                                        <a href="{{ route('tenant.files.show', $file) }}" class="avatar-text avatar-md">
                                             <i class="feather-eye"></i>
                                         </a>
                                     </div>
@@ -103,7 +103,7 @@
                                 <div class="text-center py-5">
                                     <i class="feather-folder fs-1 text-muted mb-3"></i>
                                     <p class="text-muted">No recent files found</p>
-                                    <a href="{{ route('files.create') }}" class="btn btn-sm btn-primary mt-2">Upload File</a>
+                                    <a href="{{ route('tenant.files.create') }}" class="btn btn-sm btn-primary mt-2">Upload File</a>
                                 </div>
                             @endforelse
                         </div>
@@ -117,7 +117,7 @@
                         <div class="card-header">
                             <h5 class="card-title">PowerBI Dashboards</h5>
                             <div class="card-header-action">
-                                <a href="{{ route('powerbi-links.index') }}" class="btn btn-sm btn-light-brand">View All</a>
+                                <a href="{{ route('tenant.powerbi-links.index') }}" class="btn btn-sm btn-light-brand">View All</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -128,11 +128,11 @@
                                             <i class="feather-bar-chart-2"></i>
                                         </div>
                                         <div>
-                                            <a href="{{ route('powerbi-links.show', $link) }}" class="fw-semibold d-block text-truncate-1-line" style="max-width: 200px;">{{ $link->title }}</a>
+                                            <a href="{{ route('tenant.powerbi-links.show', $link) }}" class="fw-semibold d-block text-truncate-1-line" style="max-width: 200px;">{{ $link->title }}</a>
                                             <span class="fs-11 text-muted">{{ $link->powerbiLinkType->name ?? 'Report' }}</span>
                                         </div>
                                     </div>
-                                    <a href="{{ route('powerbi-links.show', $link) }}" class="avatar-text avatar-sm">
+                                    <a href="{{ route('tenant.powerbi-links.show', $link) }}" class="avatar-text avatar-sm">
                                         <i class="feather-external-link"></i>
                                     </a>
                                 </div>
@@ -174,7 +174,7 @@
                             <div class="card-header">
                                 <h5 class="card-title">Expiring Files (Next 30 Days)</h5>
                                 <div class="card-header-action">
-                                    <a href="{{ route('files.index') }}?filter=expiring" class="btn btn-sm btn-light-brand">View All</a>
+                                    <a href="{{ route('tenant.files.index') }}?filter=expiring" class="btn btn-sm btn-light-brand">View All</a>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -204,7 +204,7 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('files.show', $file) }}" class="btn btn-sm btn-light-brand">View</a>
+                                                        <a href="{{ route('tenant.files.show', $file) }}" class="btn btn-sm btn-light-brand">View</a>
                                                     </td>
                                                 </tr>
                                             @endforeach

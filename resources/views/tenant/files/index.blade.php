@@ -3,8 +3,8 @@
 @section('page-title', 'Files')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('files.index') }}">Files</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('tenant.dashboard') }}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('tenant.files.index') }}">Files</a></li>
     @if(!empty($filters['file_type_id']))
         @php
             $currentFileType = $fileTypes->firstWhere('id', $filters['file_type_id']);
@@ -28,7 +28,7 @@
             </a>
         </div>
         <div class="content-sidebar-header">
-            <a href="{{ route('files.create') }}" class="btn btn-primary w-100">
+            <a href="{{ route('tenant.files.create') }}" class="btn btn-primary w-100">
                 <i class="feather-upload me-2"></i>
                 <span>Upload Files</span>
             </a>
@@ -36,7 +36,7 @@
         <div class="content-sidebar-body">
             <ul class="nav flex-column nxl-content-sidebar-item">
                 <li class="nav-item">
-                    <a class="nav-link {{ empty($filters['file_type_id']) ? 'active' : '' }}" href="{{ route('files.index') }}">
+                    <a class="nav-link {{ empty($filters['file_type_id']) ? 'active' : '' }}" href="{{ route('tenant.files.index') }}">
                         <i class="feather-home"></i>
                         <span>All Files</span>
                     </a>
@@ -58,7 +58,7 @@
                             @foreach($fileTypes as $fileType)
                             <li class="nav-item">
                                 <a class="nav-link {{ !empty($filters['file_type_id']) && $filters['file_type_id'] == $fileType->id ? 'active' : '' }}" 
-                                   href="{{ route('files.index', array_merge(request()->except(['file_type_id', 'page']), ['file_type_id' => $fileType->id])) }}">
+                                   href="{{ route('tenant.files.index', array_merge(request()->except(['file_type_id', 'page']), ['file_type_id' => $fileType->id])) }}">
                                     <i class="feather-folder"></i>
                                     <span>{{ $fileType->name }}</span>
                                     <span class="badge bg-soft-secondary text-secondary ms-auto">{{ $fileType->files()->count() }}</span>
@@ -504,7 +504,7 @@
             @endif
 
             <!--! BEGIN: [recent-section] !-->
-            <div class="recent-section mb-5">
+            <div hidden class="recent-section mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="me-4">
                         <h2 class="fs-16 fw-bold mb-1">Recent Files</h2>
@@ -515,13 +515,13 @@
                             @endif
                         </div>
                     </div>
-                    <a href="{{ route('files.index') }}" class="btn btn-sm btn-light-brand">View All</a>
+                    <a href="{{ route('tenant.files.index') }}" class="btn btn-sm btn-light-brand">View All</a>
                 </div>
                 <div class="row">
                     @if($recentFiles->isEmpty())
                         <div class="col-12">
                             <div class="alert alert-info mb-0" role="alert">
-                                <i class="feather-info me-2"></i>No recent files found. <a href="{{ route('files.create') }}" class="alert-link">Upload your first file</a>.
+                                <i class="feather-info me-2"></i>No recent files found. <a href="{{ route('tenant.files.create') }}" class="alert-link">Upload your first file</a>.
                             </div>
                         </div>
                     @else
@@ -529,7 +529,7 @@
                         <div class="col-xxl-3 col-sm-6">
                             <div class="card mb-4 stretch stretch-full">
                                 <div class="card-body p-0 ht-250">
-                                    <a href="{{ route('files.preview', $recentFile->id) }}" 
+                                    <a href="{{ route('tenant.files.preview', $recentFile->id) }}" 
                                        class="w-100 h-100 d-flex align-items-center justify-content-center">
                                         @php
                                             $extension = strtolower(pathinfo($recentFile->file_name, PATHINFO_EXTENSION));
@@ -558,7 +558,7 @@
                                     <div class="d-flex align-items-start justify-content-between mb-2">
                                         <div class="flex-grow-1 me-2">
                                             <h2 class="fs-13 mb-1 text-truncate-1-line">
-                                                <a href="{{ route('files.show', $recentFile->id) }}" class="text-dark">
+                                                <a href="{{ route('tenant.files.show', $recentFile->id) }}" class="text-dark">
                                                     {{ $recentFile->title ?? $recentFile->file_name }}
                                                 </a>
                                             </h2>
@@ -586,26 +586,26 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a href="{{ route('files.preview', $recentFile->id) }}" class="dropdown-item">
+                                                    <a href="{{ route('tenant.files.preview', $recentFile->id) }}" class="dropdown-item">
                                                         <i class="feather-eye me-3"></i>
                                                         <span>Preview</span>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ route('files.show', $recentFile->id) }}" class="dropdown-item">
+                                                    <a href="{{ route('tenant.files.show', $recentFile->id) }}" class="dropdown-item">
                                                         <i class="feather-info me-3"></i>
                                                         <span>Details</span>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ route('files.download', $recentFile->id) }}" class="dropdown-item">
+                                                    <a href="{{ route('tenant.files.download', $recentFile->id) }}" class="dropdown-item">
                                                         <i class="feather-download me-3"></i>
                                                         <span>Download</span>
                                                     </a>
                                                 </li>
                                                 <li class="dropdown-divider"></li>
                                                 <li>
-                                                    <a href="{{ route('files.edit', $recentFile->id) }}" class="dropdown-item">
+                                                    <a href="{{ route('tenant.files.edit', $recentFile->id) }}" class="dropdown-item">
                                                         <i class="feather-edit-2 me-3"></i>
                                                         <span>Edit</span>
                                                     </a>
@@ -613,7 +613,7 @@
                                                 @can('delete', $recentFile)
                                                 <li class="dropdown-divider"></li>
                                                 <li>
-                                                    <form action="{{ route('files.destroy', $recentFile->id) }}" 
+                                                    <form action="{{ route('tenant.files.destroy', $recentFile->id) }}" 
                                                           method="POST" 
                                                           onsubmit="return confirm('Are you sure you want to delete this file?');">
                                                         @csrf
@@ -644,7 +644,7 @@
                         <div class="text-muted text-truncate-1-line">Browse files by document type</div>
                     </div>
                     @if(!empty($filters['file_type_id']))
-                        <a href="{{ route('files.index') }}" class="btn btn-sm btn-light-brand">
+                        <a href="{{ route('tenant.files.index') }}" class="btn btn-sm btn-light-brand">
                             <i class="feather-x me-1"></i>Clear Filter
                         </a>
                     @endif
@@ -661,10 +661,10 @@
                     <div class="col-xxl-3 col-xl-4 col-sm-6">
                         <div class="card mb-4 stretch stretch-full {{ !empty($filters['file_type_id']) && $filters['file_type_id'] == $fileType->id ? 'border-primary' : '' }}">
                             <div class="card-body p-0">
-                                <a href="{{ route('files.index', array_merge(request()->except(['file_type_id', 'page']), ['file_type_id' => $fileType->id])) }}" 
+                                <a href="{{ route('tenant.files.index', array_merge(request()->except(['file_type_id', 'page']), ['file_type_id' => $fileType->id])) }}" 
                                    class="d-flex align-items-center border-bottom p-3">
                                     <div class="wd-50 ht-50 bg-gray-200 rounded d-flex align-items-center justify-content-center">
-                                        <i class="feather-folder fs-4 text-primary"></i>
+                                        <i class="{{ $fileType->metadata['icon'] ?? 'feather-folder' }} fs-4 text-primary"></i>
                                     </div>
                                     <div class="ms-3">
                                         <span class="d-block fw-semibold text-dark">{{ $fileType->name }}</span>
@@ -679,7 +679,7 @@
                                         <span class="badge bg-soft-{{ $fileType->attribute_type === 'grower' ? 'success' : ($fileType->attribute_type === 'customer' ? 'info' : 'secondary') }} text-{{ $fileType->attribute_type === 'grower' ? 'success' : ($fileType->attribute_type === 'customer' ? 'info' : 'secondary') }} fs-10">
                                             {{ ucfirst($fileType->attribute_type) }}
                                         </span>
-                                        <a href="{{ route('files.index', array_merge(request()->except(['file_type_id', 'page']), ['file_type_id' => $fileType->id])) }}" 
+                                        <a href="{{ route('tenant.files.index', array_merge(request()->except(['file_type_id', 'page']), ['file_type_id' => $fileType->id])) }}" 
                                            class="fs-12 text-primary">
                                             View Files <i class="feather-arrow-right ms-1"></i>
                                         </a>
@@ -720,7 +720,7 @@
                         </div>
                     </div>
                     @if(!empty($filters['file_type_id']))
-                        <a href="{{ route('files.index') }}" class="btn btn-sm btn-light-brand">
+                        <a href="{{ route('tenant.files.index') }}" class="btn btn-sm btn-light-brand">
                             <i class="feather-x me-1"></i>Clear Filter
                         </a>
                     @endif
@@ -733,48 +733,56 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Type</th>
+                                        <th scope="col">Folder</th>
                                         <th scope="col">Size</th>
                                         <th scope="col">Upload</th>
-                                        <th scope="col">Members</th>
+                                        <th scope="col">Views</th>
                                         <th scope="col" class="text-end">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($files as $file)
+                                    @php
+                                        $extension = strtolower(pathinfo($file->original_filename, PATHINFO_EXTENSION));
+                                        $iconMap = [
+                                            'pdf' => 'pdf.png',
+                                            'doc' => 'doc.png',
+                                            'docx' => 'doc.png',
+                                            'xls' => 'xls.png',
+                                            'xlsx' => 'xls.png',
+                                            'zip' => 'zip.png',
+                                            'rar' => 'zip.png',
+                                            'jpg' => 'png.png',
+                                            'jpeg' => 'png.png',
+                                            'png' => 'png.png',
+                                            'gif' => 'png.png',
+                                            'csv' => 'csv.png',
+                                            'txt' => 'txt.png',
+                                        ];
+                                        $icon = $iconMap[$extension] ?? 'undefined.png';
+                                    @endphp
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center gap-3">
-                                                <img src="{{ asset('vendor/duralux-admin/assets/images/file-icons/html.png') }}" class="img-fluid rounded wd-30" alt="">
-                                                <a href="javascript:void(0)">HTML5 Webpages - V2.3.4</a>
+                                                <img src="{{ asset('vendor/duralux-admin/assets/images/file-icons/' . $icon) }}" class="img-fluid rounded wd-30" alt="">
+                                                <a href="{{ route('tenant.files.show', $file) }}">{{ truncate_filename($file->original_filename, 30) }}</a>
                                             </div>
                                         </td>
-                                        <td>5.34 MB</td>
-                                        <td>25 March, 2023</td>
+                                        <td>{{ $file->fileType->name }}</td>
+                                        <td>{{ number_format($file->file_size / 1048576, 2) }} MB</td>
+                                        <td>{{ $file->created_at->format('d F, Y') }}</td>
                                         <td>
+                                            @if($file->viewers->isNotEmpty())
                                             <div class="img-group lh-lg">
-                                                <a href="javascript:void(0)" class="avatar-image avatar-sm" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Janette Dalton">
-                                                    <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/2.png') }}" class="img-fluid" alt="image">
+                                                @foreach($file->viewers as $viewer)
+                                                <a href="{{ route('tenant.users.show', $viewer) }}" class="avatar-image avatar-sm" data-bs-toggle="tooltip" data-bs-trigger="hover" title="{{ $viewer->name }}">
+                                                    <img src="{{ asset($viewer->profile_photo_url) }}" class="img-fluid" alt="image">
                                                 </a>
-                                                <a href="javascript:void(0)" class="avatar-image avatar-sm" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Michael Ksen">
-                                                    <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/3.png') }}" class="img-fluid" alt="image">
-                                                </a>
-                                                <a href="javascript:void(0)" class="avatar-image avatar-sm" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Socrates Itumay">
-                                                    <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/4.png') }}" class="img-fluid" alt="image">
-                                                </a>
-                                                <a href="javascript:void(0)" class="avatar-image avatar-sm" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Marianne Audrey">
-                                                    <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/5.png') }}" class="img-fluid" alt="image">
-                                                </a>
-                                                <a href="javascript:void(0)" class="avatar-image avatar-sm" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Marianne Audrey">
-                                                    <img src="{{ asset('vendor/duralux-admin/assets/images/avatar/6.png') }}" class="img-fluid" alt="image">
-                                                </a>
-                                                <a href="javascript:void(0)" class="avatar-text avatar-sm" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Explorer More">
-                                                    <i class="feather-more-horizontal"></i>
-                                                </a>
-                                                <div>
-                                                    <span class="text-muted fs-12 ms-2">852+ members</span>
-                                                </div>
+                                                @endforeach
                                             </div>
+                                            @else
+                                            <span class="text-muted">No views yet</span>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="dropdown hstack text-end justify-content-end">
@@ -783,30 +791,36 @@
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a href="javascript:void(0)" class="dropdown-item">
+                                                        <a href="{{ route('tenant.files.show', $file) }}" class="dropdown-item">
                                                             <i class="feather-eye me-3"></i>
                                                             <span>Open</span>
                                                         </a>
                                                     </li>
+                                                    @can('download files')
                                                     <li>
-                                                        <a href="javascript:void(0)" class="dropdown-item">
+                                                        <a href="{{ route('tenant.files.download', $file) }}" class="dropdown-item">
                                                             <i class="feather-share-2 me-3"></i>
-                                                            <span>Share</span>
+                                                            <span>Download</span>
                                                         </a>
                                                     </li>
                                                     <li class="dropdown-divider"></li>
+                                                    @endcan
+                                                    @can('edit files')
                                                     <li>
-                                                        <a href="javascript:void(0)" class="dropdown-item">
-                                                            <i class="feather-scissors me-3"></i>
-                                                            <span>Backup</span>
+                                                        <a href="{{ route('tenant.files.edit', $file) }}" class="dropdown-item">
+                                                            <i class="feather-edit-3 me-3"></i>
+                                                            <span>Edit</span>
                                                         </a>
                                                     </li>
+                                                    @endcan
+                                                    @can('delete files')
                                                     <li>
-                                                        <a href="javascript:void(0)" class="dropdown-item" data-action-target="#fileFolderDeleteAction">
+                                                        <a href="{{ route('tenant.files.destroy', $file) }}" class="dropdown-item text-danger delete-document-btn">
                                                             <i class="feather-x me-3"></i>
                                                             <span>Delete</span>
                                                         </a>
                                                     </li>
+                                                    @endcan
                                                 </ul>
                                             </div>
                                         </td>
@@ -839,7 +853,7 @@
                         <p class="text-muted">Try adjusting your search criteria or upload some files.</p>
                         @can('upload files')
                         
-                        <a href="{{ route('files.create') }}" class="btn btn-primary d-inline-block">
+                        <a href="{{ route('tenant.files.create') }}" class="btn btn-primary d-inline-block">
                             <i class="feather-upload me-2"></i>
                             <span>Upload Files</span>
                         </a>
@@ -855,4 +869,36 @@
 
 @section('page-script')
     <script src="{{ asset('vendor/duralux-admin/assets/js/apps-storage-init.min.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle delete confirmation
+            document.querySelectorAll('.delete-document-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const documentId = btn.getAttribute('data-document-id');
+                const documentName = btn.getAttribute('data-document-name');
+                if(confirm(`Are you sure you want to permanently delete "${documentName}"?`)) {
+                fetch(`/t/files/${documentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if(response.ok) {
+                    // Reload the page with current page parameter to preserve pagination
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const page = urlParams.get('page') || 1;
+                    window.location.href = `{{ route('tenant.files.index') }}?page=${page}`;
+                    } else {
+                    alert('Failed to delete document.');
+                    }
+                })
+                .catch(() => alert('Failed to delete document.'));
+                }
+            });
+            });
+        });
+    </script>
+
 @endsection

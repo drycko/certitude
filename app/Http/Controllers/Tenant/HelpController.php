@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Tenant;
 
-use App\Models\HelpArticle;
+use App\Http\Controllers\Controller;
+use App\Models\Tenant\HelpArticle;
 use Illuminate\Http\Request;
-use App\Services\NotificationService;
+use App\Services\Tenant\NotificationService;
 use App\Services\Tenant\UserAccessService;
 use Illuminate\Support\Facades\Auth;
 

@@ -150,6 +150,7 @@ class User extends Authenticatable
 	
 	/**
 	* Get the user's profile photo url.
+	* accessble via $user->profile_photo_url
 	*/
 	public function getProfilePhotoUrlAttribute(): string
 	{
